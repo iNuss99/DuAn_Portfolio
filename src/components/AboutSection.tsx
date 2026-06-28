@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { FadeIn } from './ui/FadeIn';
 import { AnimatedText } from './ui/AnimatedText';
 import { ContactButton } from './ui/Buttons';
-import { TechOrbit } from './ui/TechOrbit';
+import { TechCube3D } from './ui/TechCube3D';
 import { CyberGame } from './ui/CyberGame';
 import { personalInfo, decorative3D } from '../data/portfolioData';
 import { playClickSound, playHoverSound } from '../utils/soundEffects';
@@ -104,7 +104,7 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
                 : 'bg-transparent text-white/50 border-white/10 hover:text-white hover:border-white/30'
             }`}
           >
-            ⚛️ Quỹ đạo công nghệ
+            📦 Hộp công nghệ 3D
           </button>
           <button
             onClick={() => switchTab('game')}
@@ -133,9 +133,9 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
                   className="w-full"
                 >
                   <span className="text-[10px] font-bold text-text-primary/40 uppercase tracking-widest block mb-4 font-sans select-none">
-                    ⚛️ Rê chuột để đẩy / Click để tăng tốc quỹ đạo công nghệ
+                    📦 Nhấp và kéo chuột để xoay khối hộp công nghệ 3D tự do
                   </span>
-                  <TechOrbit />
+                  <TechCube3D />
                 </motion.div>
               ) : (
                 <motion.div
