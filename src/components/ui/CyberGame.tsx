@@ -4,7 +4,8 @@ import { playClickSound, playHoverSound, getMuteStatus } from '../../utils/sound
 interface Laser {
   x: number;
   y: number;
-  speed: number;
+  vx: number;
+  vy: number;
 }
 
 interface Bug {
@@ -17,6 +18,16 @@ interface Bug {
 }
 
 interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  color: string;
+  alpha: number;
+}
+
+interface ThrusterSpark {
   x: number;
   y: number;
   vx: number;
@@ -40,13 +51,16 @@ export const CyberGame = () => {
   const [shields, setShields] = useState(3);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: 150 });
+  const mouseRef = useRef({ x: 230 });
+  const shipXRef = useRef(230); // Eased X position
+  const isMouseDownRef = useRef(false); // Track click boost
   const animRef = useRef<number>(0);
 
   // Lists of active entities
   const lasersRef = useRef<Laser[]>([]);
   const bugsRef = useRef<Bug[]>([]);
   const particlesRef = useRef<Particle[]>([]);
+  const thrustersRef = useRef<ThrusterSpark[]>([]);
 
   // Timer intervals for spawning and shooting
   const lastSpawnRef = useRef<number>(0);
@@ -61,21 +75,24 @@ export const CyberGame = () => {
   }, []);
 
   // Web Audio Synth for game sounds
-  const playLaserSound = () => {
+  const playLaserSound = (boost: boolean) => {
     if (getMuteStatus()) return;
     try {
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(450, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.12);
-      gain.gain.setValueAtTime(0.04, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      
+      osc.type = boost ? 'triangle' : 'sawtooth';
+      osc.frequency.setValueAtTime(boost ? 600 : 450, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(boost ? 200 : 100, ctx.currentTime + (boost ? 0.16 : 0.12));
+      
+      gain.gain.setValueAtTime(boost ? 0.05 : 0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (boost ? 0.16 : 0.12));
+      
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start();
-      osc.stop(ctx.currentTime + 0.12);
+      osc.stop(ctx.currentTime + (boost ? 0.16 : 0.12));
     } catch {}
   };
 
@@ -83,7 +100,6 @@ export const CyberGame = () => {
     if (getMuteStatus()) return;
     try {
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      // Synthesize noise buffer for explosion
       const bufferSize = ctx.sampleRate * 0.15;
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
@@ -129,16 +145,16 @@ export const CyberGame = () => {
 
   // Create explosion particles
   const spawnExplosion = (x: number, y: number, color: string) => {
-    const count = 12;
+    const count = 15;
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const speed = 1 + Math.random() * 3;
+      const speed = 1 + Math.random() * 4;
       particlesRef.current.push({
         x,
         y,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
-        radius: 1.5 + Math.random() * 2,
+        radius: 1.2 + Math.random() * 2,
         color,
         alpha: 1
       });
@@ -152,6 +168,9 @@ export const CyberGame = () => {
     lasersRef.current = [];
     bugsRef.current = [];
     particlesRef.current = [];
+    thrustersRef.current = [];
+    shipXRef.current = 230;
+    mouseRef.current = { x: 230 };
     setGameState('PLAYING');
   };
 
@@ -167,14 +186,25 @@ export const CyberGame = () => {
       // Clear frame
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 1. Spawning Invaders
-      if (timestamp - lastSpawnRef.current > 750) {
+      // 1. Smooth Ship Inertia (Easing)
+      const targetX = mouseRef.current.x;
+      const dx = targetX - shipXRef.current;
+      const velocityX = dx * 0.13; // Easing coefficient (quán tính)
+      shipXRef.current += velocityX;
+
+      // 2. Spaceship Tilt angle (max 22 degrees)
+      const tiltAngle = Math.max(-0.38, Math.min(0.38, velocityX * 0.055));
+
+      const shipY = canvas.height - 25;
+
+      // 3. Spawning Invaders
+      if (timestamp - lastSpawnRef.current > 700) {
         const typeIndex = Math.floor(Math.random() * BUG_TYPES.length);
         const type = BUG_TYPES[typeIndex];
         bugsRef.current.push({
           x: type.radius + Math.random() * (canvas.width - type.radius * 2),
           y: -20,
-          speed: type.speed + (score * 0.02), // Accelerate as score increases
+          speed: type.speed + (score * 0.015), // Accelerate over score
           radius: type.radius,
           label: type.label,
           color: type.color
@@ -182,36 +212,91 @@ export const CyberGame = () => {
         lastSpawnRef.current = timestamp;
       }
 
-      // 2. Shooting Lasers
-      if (timestamp - lastShootRef.current > 180) {
-        lasersRef.current.push({
-          x: mouseRef.current.x,
-          y: canvas.height - 35,
-          speed: 6
-        });
-        playLaserSound();
+      // 4. Fire Lasers (Normal vs Click-Boost Triple Laser)
+      const isBoosted = isMouseDownRef.current;
+      const fireInterval = isBoosted ? 140 : 180;
+
+      if (timestamp - lastShootRef.current > fireInterval) {
+        if (isBoosted) {
+          // Triple Laser Spread
+          lasersRef.current.push(
+            { x: shipXRef.current, y: shipY - 14, vx: 0, vy: -7.5 },
+            { x: shipXRef.current - 5, y: shipY - 10, vx: -1.3, vy: -7.2 },
+            { x: shipXRef.current + 5, y: shipY - 10, vx: 1.3, vy: -7.2 }
+          );
+          playLaserSound(true);
+        } else {
+          // Single Straight Laser
+          lasersRef.current.push({
+            x: shipXRef.current,
+            y: shipY - 14,
+            vx: 0,
+            vy: -6.5
+          });
+          playLaserSound(false);
+        }
         lastShootRef.current = timestamp;
       }
 
-      // 3. Update & Draw Lasers
-      ctx.fillStyle = "#FF66FF";
+      // 5. Fire Thruster Flame particles
+      // Generate sparks that drift behind
+      if (Math.random() < 0.8) {
+        const flameOffset = Math.sin(timestamp * 0.05) * 2;
+        thrustersRef.current.push({
+          x: shipXRef.current + flameOffset,
+          y: shipY + 8,
+          // Sparks blow backward and drift opposite to movement
+          vx: -velocityX * 0.18 + (Math.random() - 0.5) * 0.6,
+          vy: 1.5 + Math.random() * 2.5,
+          radius: 1.5 + Math.random() * 2,
+          color: Math.random() < 0.5 ? '#06B6D4' : '#3178C6',
+          alpha: 0.9
+        });
+      }
+
+      // 6. Update & Draw Thruster Sparks
+      for (let i = thrustersRef.current.length - 1; i >= 0; i--) {
+        const t = thrustersRef.current[i];
+        t.x += t.vx;
+        t.y += t.vy;
+        t.alpha -= 0.045;
+
+        if (t.alpha <= 0) {
+          thrustersRef.current.splice(i, 1);
+          continue;
+        }
+
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
+        ctx.fillStyle = t.color;
+        ctx.globalAlpha = t.alpha;
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = t.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1.0;
+      }
+
+      // 7. Update & Draw Lasers
+      ctx.fillStyle = isBoosted ? "#00FFFF" : "#FF66FF";
       ctx.shadowBlur = 8;
-      ctx.shadowColor = "#FF66FF";
+      ctx.shadowColor = isBoosted ? "#00FFFF" : "#FF66FF";
       for (let i = lasersRef.current.length - 1; i >= 0; i--) {
         const l = lasersRef.current[i];
-        l.y -= l.speed;
+        l.x += l.vx;
+        l.y += l.vy;
 
-        // Draw laser beam
+        // Draw tilted lasers
         ctx.fillRect(l.x - 1.5, l.y, 3, 10);
 
         // Remove offscreen
-        if (l.y < 0) {
+        if (l.y < -10 || l.x < -10 || l.x > canvas.width + 10) {
           lasersRef.current.splice(i, 1);
         }
       }
       ctx.shadowBlur = 0; // Reset shadow
 
-      // 4. Update & Draw Bugs
+      // 8. Update & Draw Bugs
       for (let i = bugsRef.current.length - 1; i >= 0; i--) {
         const b = bugsRef.current[i];
         b.y += b.speed;
@@ -250,7 +335,7 @@ export const CyberGame = () => {
         }
       }
 
-      // 5. Update & Draw Particles
+      // 9. Update & Draw Laser Hit Particles
       for (let i = particlesRef.current.length - 1; i >= 0; i--) {
         const p = particlesRef.current[i];
         p.x += p.vx;
@@ -270,7 +355,7 @@ export const CyberGame = () => {
         ctx.globalAlpha = 1.0; // Reset
       }
 
-      // 6. Collision Detection (Laser vs Bug)
+      // 10. Collision Detection (Laser vs Bug)
       for (let li = lasersRef.current.length - 1; li >= 0; li--) {
         const l = lasersRef.current[li];
         for (let bi = bugsRef.current.length - 1; bi >= 0; bi--) {
@@ -294,26 +379,40 @@ export const CyberGame = () => {
               }
               return next;
             });
-            break; // Laser is destroyed, exit inner loop
+            break; // Exit inner loop
           }
         }
       }
 
-      // 7. Draw Player Ship
-      const shipX = mouseRef.current.x;
-      const shipY = canvas.height - 25;
+      // 11. Draw Player Ship with Tilt Rotation
+      ctx.save();
+      ctx.translate(shipXRef.current, shipY);
+      ctx.rotate(tiltAngle);
 
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = "#61DAFB";
-      ctx.fillStyle = "#61DAFB";
+      // Glow effect
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = isBoosted ? "#00FFFF" : "#61DAFB";
+      ctx.fillStyle = isBoosted ? "#00FFFF" : "#61DAFB";
+
       ctx.beginPath();
       // Draw a sleek spaceship triangle
-      ctx.moveTo(shipX, shipY - 14);
-      ctx.lineTo(shipX - 12, shipY + 8);
-      ctx.lineTo(shipX + 12, shipY + 8);
+      ctx.moveTo(0, -15);
+      ctx.lineTo(-12, 8);
+      ctx.lineTo(12, 8);
       ctx.closePath();
       ctx.fill();
-      ctx.shadowBlur = 0; // Reset
+
+      // Mini wings accent lines
+      ctx.strokeStyle = "#FFFFFF";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(-6, 0);
+      ctx.lineTo(-12, 8);
+      ctx.moveTo(6, 0);
+      ctx.lineTo(12, 8);
+      ctx.stroke();
+
+      ctx.restore();
 
       animRef.current = requestAnimationFrame(gameLoop);
     };
@@ -331,8 +430,16 @@ export const CyberGame = () => {
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
     const relativeX = e.clientX - rect.left;
-    // Bound position inside screen boundaries
+    // Bound target position inside screen boundaries
     mouseRef.current.x = Math.max(15, Math.min(canvas.width - 15, relativeX));
+  };
+
+  const handleMouseDown = () => {
+    isMouseDownRef.current = true;
+  };
+
+  const handleMouseUp = () => {
+    isMouseDownRef.current = false;
   };
 
   return (
@@ -373,7 +480,9 @@ export const CyberGame = () => {
                 CYBER BUG BLASTER
               </h3>
               <p className="text-[10px] text-white/40 leading-relaxed font-sans mt-1">
-                Di chuyển chuột sang 2 bên để di chuyển phi thuyền và tiêu diệt các lỗi hệ thống trước khi chúng vượt qua lớp giáp bảo vệ!
+                Di chuyển chuột để trượt mượt mà. 
+                <br />
+                <span className="text-cyan-400 font-semibold">👉 CLICK & GIỮ CHUỘT</span> để bắn súng 3 nòng siêu tốc!
               </p>
             </div>
             <button
@@ -392,6 +501,9 @@ export const CyberGame = () => {
             width={460}
             height={320}
             onMouseMove={handleMouseMove}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
             className="w-full h-full cursor-none bg-gradient-to-b from-black via-black to-[#05000a]"
           />
         )}
