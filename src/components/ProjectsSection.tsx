@@ -172,7 +172,7 @@ export const ProjectsSection = () => {
 
         {/* Section Heading */}
         <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-12 sm:mb-16">
-          <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] select-none">
+          <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] select-none glitch-hover">
             DỰ ÁN
           </h2>
         </FadeIn>

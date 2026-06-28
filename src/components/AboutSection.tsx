@@ -4,7 +4,7 @@ import { FadeIn } from './ui/FadeIn';
 import { AnimatedText } from './ui/AnimatedText';
 import { ContactButton } from './ui/Buttons';
 import { TechOrbit } from './ui/TechOrbit';
-import { CyberTerminal } from './ui/CyberTerminal';
+import { CyberGame } from './ui/CyberGame';
 import { personalInfo, decorative3D } from '../data/portfolioData';
 import { playClickSound, playHoverSound } from '../utils/soundEffects';
 
@@ -39,9 +39,9 @@ const FloatingDecor = ({
 };
 
 export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
-  const [activeTab, setActiveTab] = useState<'orbit' | 'terminal'>('orbit');
+  const [activeTab, setActiveTab] = useState<'orbit' | 'game'>('orbit');
 
-  const switchTab = (tab: 'orbit' | 'terminal') => {
+  const switchTab = (tab: 'orbit' | 'game') => {
     if (tab === activeTab) return;
     playClickSound();
     setActiveTab(tab);
@@ -83,7 +83,7 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
       {/* Centered Contents */}
       <div className="relative z-20 flex flex-col items-center w-full max-w-4xl text-center">
         <FadeIn y={40} delay={0} duration={0.8}>
-          <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center text-[3rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] select-none mb-10 sm:mb-14 md:mb-16">
+          <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center text-[3rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] select-none mb-10 sm:mb-14 md:mb-16 glitch-hover">
             VỀ TÔI
           </h2>
         </FadeIn>
@@ -107,15 +107,15 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
             ⚛️ Quỹ đạo công nghệ
           </button>
           <button
-            onClick={() => switchTab('terminal')}
+            onClick={() => switchTab('game')}
             onMouseEnter={playHoverSound}
             className={`px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 border ${
-              activeTab === 'terminal'
+              activeTab === 'game'
                 ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.25)]'
                 : 'bg-transparent text-white/50 border-white/10 hover:text-white hover:border-white/30'
             }`}
           >
-            📟 Giả lập Terminal
+            🎮 Game Diệt Bug
           </button>
         </FadeIn>
 
@@ -139,7 +139,7 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
                 </motion.div>
               ) : (
                 <motion.div
-                  key="terminal"
+                  key="game"
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -15 }}
@@ -147,9 +147,9 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
                   className="w-full"
                 >
                   <span className="text-[10px] font-bold text-text-primary/40 uppercase tracking-widest block mb-4 font-sans select-none">
-                    📟 Nhấp vào bảng và gõ câu lệnh của bạn
+                    🎮 Di chuyển chuột trên màn hình game để bắn hạ Bug
                   </span>
-                  <CyberTerminal />
+                  <CyberGame />
                 </motion.div>
               )}
             </AnimatePresence>
