@@ -1,10 +1,12 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { FadeIn } from './ui/FadeIn';
 import { AnimatedText } from './ui/AnimatedText';
 import { ContactButton } from './ui/Buttons';
 import { TechOrbit } from './ui/TechOrbit';
+import { CyberTerminal } from './ui/CyberTerminal';
 import { personalInfo, decorative3D } from '../data/portfolioData';
+import { playClickSound, playHoverSound } from '../utils/soundEffects';
 
 interface AboutSectionProps {
   onOpenContact: () => void;
@@ -37,10 +39,18 @@ const FloatingDecor = ({
 };
 
 export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
+  const [activeTab, setActiveTab] = useState<'orbit' | 'terminal'>('orbit');
+
+  const switchTab = (tab: 'orbit' | 'terminal') => {
+    if (tab === activeTab) return;
+    playClickSound();
+    setActiveTab(tab);
+  };
+
   return (
     <section id="about" className="relative w-full min-h-screen bg-dark flex flex-col items-center justify-center px-5 sm:px-8 md:px-10 py-24 overflow-hidden z-20">
 
-      {/* Parallax Decorative 3D Images — each moves at a different speed */}
+      {/* Parallax Decorative 3D Images */}
       <FloatingDecor
         src={decorative3D.topLeftMoon}
         alt="Moon Decor"
@@ -83,13 +93,66 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
           className="text-text-primary font-medium text-center leading-relaxed text-base sm:text-lg md:text-xl lg:text-2xl max-w-[720px] mb-12 sm:mb-16 select-none"
         />
 
-        {/* Interactive Tech Orbit Canvas */}
+        {/* Tab Selection Header */}
+        <FadeIn y={20} delay={0.1} duration={0.8} className="flex gap-4 mb-6 z-30 relative select-none">
+          <button
+            onClick={() => switchTab('orbit')}
+            onMouseEnter={playHoverSound}
+            className={`px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 border ${
+              activeTab === 'orbit'
+                ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.25)]'
+                : 'bg-transparent text-white/50 border-white/10 hover:text-white hover:border-white/30'
+            }`}
+          >
+            ⚛️ Quỹ đạo công nghệ
+          </button>
+          <button
+            onClick={() => switchTab('terminal')}
+            onMouseEnter={playHoverSound}
+            className={`px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 border ${
+              activeTab === 'terminal'
+                ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.25)]'
+                : 'bg-transparent text-white/50 border-white/10 hover:text-white hover:border-white/30'
+            }`}
+          >
+            📟 Giả lập Terminal
+          </button>
+        </FadeIn>
+
+        {/* Tab Panel Content */}
         <FadeIn y={30} delay={0.2} duration={0.8} className="w-full mb-12 sm:mb-16 overflow-hidden">
-          <div className="w-full bg-[#141414]/25 border border-white/5 backdrop-blur-sm rounded-[2rem] p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-            <span className="text-[10px] font-bold text-text-primary/40 uppercase tracking-widest block mb-4 font-sans select-none">
-              ⚛️ Rê chuột để đẩy / Click để kích hoạt quỹ đạo công nghệ
-            </span>
-            <TechOrbit />
+          <div className="w-full bg-[#141414]/25 border border-white/5 backdrop-blur-sm rounded-[2rem] p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] min-h-[380px] flex flex-col justify-start">
+            <AnimatePresence mode="wait">
+              {activeTab === 'orbit' ? (
+                <motion.div
+                  key="orbit"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.25 }}
+                  className="w-full"
+                >
+                  <span className="text-[10px] font-bold text-text-primary/40 uppercase tracking-widest block mb-4 font-sans select-none">
+                    ⚛️ Rê chuột để đẩy / Click để tăng tốc quỹ đạo công nghệ
+                  </span>
+                  <TechOrbit />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="terminal"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.25 }}
+                  className="w-full"
+                >
+                  <span className="text-[10px] font-bold text-text-primary/40 uppercase tracking-widest block mb-4 font-sans select-none">
+                    📟 Nhấp vào bảng và gõ câu lệnh của bạn
+                  </span>
+                  <CyberTerminal />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </FadeIn>
 

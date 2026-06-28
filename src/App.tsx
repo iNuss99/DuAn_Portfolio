@@ -7,7 +7,7 @@ import { ProjectsSection } from './components/ProjectsSection';
 import { ContactModal } from './components/ContactModal';
 import { CursorGlow } from './components/ui/CursorGlow';
 import { ScrollNav } from './components/ui/ScrollNav';
-import { SoundToggle } from './components/ui/SoundToggle';
+import { CyberDock } from './components/ui/CyberDock';
 
 function App() {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -18,10 +18,17 @@ function App() {
   return (
     <div className="bg-dark min-h-screen w-full text-white font-sans overflow-x-clip relative">
 
+      {/* Ambient Mesh Glow Blobs (v4.0) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="ambient-glow-1" />
+        <div className="ambient-glow-2" />
+        <div className="ambient-glow-3" />
+      </div>
+
       {/* Global Helper Elements */}
       <CursorGlow />
       <ScrollNav />
-      <SoundToggle />
+      <CyberDock onOpenContact={openContact} />
 
       {/* 1. Hero Section */}
       <HeroSection onOpenContact={openContact} />

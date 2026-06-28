@@ -1,8 +1,9 @@
-import { useRef, memo } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, memo, useCallback } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { LiveProjectButton } from './ui/Buttons';
 import { projects } from '../data/portfolioData';
 import { FadeIn } from './ui/FadeIn';
+import { playHoverSound } from '../utils/soundEffects';
 
 interface ProjectCardProps {
   project: typeof projects[0];
@@ -10,9 +11,10 @@ interface ProjectCardProps {
   totalCards: number;
 }
 
-/** Memoized project card with sticky stacking and 3D image hover */
+/** Memoized project card with sticky stacking, 3D tilt, and 3D layered parallax depth */
 const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
   const cardContainerRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: cardContainerRef,
@@ -21,6 +23,39 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
 
   const targetScale = 1 - (totalCards - 1 - index) * 0.03;
   const scale = useTransform(scrollYProgress, [0, 1], [1, targetScale]);
+
+  // Spring values for smooth 3D tilt animation
+  const tiltX = useSpring(0, { stiffness: 120, damping: 18 });
+  const tiltY = useSpring(0, { stiffness: 120, damping: 18 });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const maxTilt = 6; // Maximum tilt angle in degrees
+    const rotateX = ((y - centerY) / centerY) * -maxTilt;
+    const rotateY = ((x - centerX) / centerX) * maxTilt;
+
+    tiltX.set(rotateX);
+    tiltY.set(rotateY);
+
+    // Update CSS custom variables for neon glowing border sweep
+    const percentX = (x / rect.width) * 100;
+    const percentY = (y / rect.height) * 100;
+    card.style.setProperty('--mouse-x', `${percentX}%`);
+    card.style.setProperty('--mouse-y', `${percentY}%`);
+  }, [tiltX, tiltY]);
+
+  const handleMouseLeave = useCallback(() => {
+    tiltX.set(0);
+    tiltY.set(0);
+  }, [tiltX, tiltY]);
 
   // Stack cards with an offset equal to the header height to show them as stacked tabs
   const topOffset = 80 + index * 120;
@@ -35,14 +70,35 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
         top: `${topOffset}px`,
         zIndex: 10 + index,
         marginBottom: `${marginBottom}px`,
+        perspective: "1200px" // Enable 3D perspective context
       }}
     >
       <motion.div
-        style={{ scale }}
-        className="w-full h-full border-2 border-text-primary bg-[#0C0C0C] rounded-[30px] sm:rounded-[40px] md:rounded-[50px] lg:rounded-[60px] p-4 sm:p-6 md:p-8 flex flex-col justify-between shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden"
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onMouseEnter={playHoverSound}
+        style={{
+          scale,
+          rotateX: tiltX,
+          rotateY: tiltY,
+          transformStyle: "preserve-3d" // Enable 3D depth rendering
+        }}
+        className="w-full h-full border-2 border-text-primary/20 bg-[#0C0C0C] rounded-[30px] sm:rounded-[40px] md:rounded-[50px] lg:rounded-[60px] p-4 sm:p-6 md:p-8 flex flex-col justify-between shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden transition-shadow duration-300 hover:shadow-[0_40px_85px_rgba(118,33,176,0.25)] relative"
       >
-        {/* Top Row */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-text-primary/15 pb-4 md:pb-6 select-none">
+        {/* Neon border highlight sweep */}
+        <div
+          className="absolute inset-0 pointer-events-none rounded-[inherit] opacity-0 hover:opacity-100 transition-opacity duration-300 z-0"
+          style={{
+            background: `radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(182, 0, 168, 0.15), transparent 40%)`
+          }}
+        />
+
+        {/* Top Row (Header) - Parallax Z Layer 1 */}
+        <div
+          style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }}
+          className="flex flex-wrap items-center justify-between gap-4 border-b border-text-primary/15 pb-4 md:pb-6 select-none relative z-10"
+        >
           <div className="flex items-center gap-4 sm:gap-6">
             <span className="font-black text-3xl sm:text-5xl md:text-6xl text-text-primary leading-none">
               {project.num}
@@ -59,10 +115,16 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
           <LiveProjectButton label="XEM DỰ ÁN" />
         </div>
 
-        {/* Image Grid with 3D flip hover */}
-        <div className="grid grid-cols-10 gap-3 sm:gap-6 mt-4 md:mt-6 flex-1 items-stretch overflow-hidden">
-          {/* Left Column (40%) — 2 stacked images */}
-          <div className="col-span-4 flex flex-col gap-3 sm:gap-6 justify-between h-full">
+        {/* Image Grid with 3D layers - Parallax Z Layer 2 & 3 */}
+        <div
+          style={{ transformStyle: "preserve-3d" }}
+          className="grid grid-cols-10 gap-3 sm:gap-6 mt-4 md:mt-6 flex-1 items-stretch overflow-hidden relative z-10"
+        >
+          {/* Left Column (40%) — 2 stacked images (Z: 45px) */}
+          <div
+            style={{ transform: "translateZ(45px)", transformStyle: "preserve-3d" }}
+            className="col-span-4 flex flex-col gap-3 sm:gap-6 justify-between h-full"
+          >
             <div className="flip-3d w-full flex-1 overflow-hidden rounded-[20px] sm:rounded-[30px] md:rounded-[40px]">
               <img
                 src={project.images.col1_1}
@@ -83,8 +145,11 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
             </div>
           </div>
 
-          {/* Right Column (60%) — 1 tall image */}
-          <div className="flip-3d col-span-6 h-full overflow-hidden rounded-[20px] sm:rounded-[30px] md:rounded-[40px]">
+          {/* Right Column (60%) — 1 tall image (Z: 55px) */}
+          <div
+            style={{ transform: "translateZ(55px)" }}
+            className="flip-3d col-span-6 h-full overflow-hidden rounded-[20px] sm:rounded-[30px] md:rounded-[40px]"
+          >
             <img
               src={project.images.col2}
               alt={`${project.name} Showcase`}
