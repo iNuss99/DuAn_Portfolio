@@ -1,4 +1,4 @@
-
+import { playHoverSound, playClickSound } from '../../utils/soundEffects';
 
 interface ButtonProps {
   onClick?: () => void;
@@ -6,14 +6,18 @@ interface ButtonProps {
   className?: string;
 }
 
-export const ContactButton: React.FC<ButtonProps> = ({
+export const ContactButton = ({
   onClick,
   label = "LIÊN HỆ VỚI TÔI",
   className = "",
-}) => {
+}: ButtonProps) => {
   return (
     <button
-      onClick={onClick}
+      onClick={() => {
+        playClickSound();
+        onClick?.();
+      }}
+      onMouseEnter={playHoverSound}
       className={`rounded-full uppercase font-medium tracking-widest text-white active:scale-95 transition-all duration-200 px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base ${className}`}
       style={{
         background: "linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%)",
@@ -27,15 +31,19 @@ export const ContactButton: React.FC<ButtonProps> = ({
   );
 };
 
-export const LiveProjectButton: React.FC<ButtonProps> = ({
+export const LiveProjectButton = ({
   onClick,
   label = "XEM DỰ ÁN",
   className = "",
-}) => {
+}: ButtonProps) => {
   return (
     <button
-      onClick={onClick}
-      className={`rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 active:scale-95 transition-all duration-200 px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base ${className}`}
+      onClick={() => {
+        playClickSound();
+        onClick?.();
+      }}
+      onMouseEnter={playHoverSound}
+      className={`rounded-full border-2 border-text-primary text-text-primary font-medium uppercase tracking-widest hover:bg-text-primary/10 active:scale-95 transition-all duration-200 px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base ${className}`}
     >
       {label}
     </button>

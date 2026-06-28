@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { FadeIn } from './ui/FadeIn';
 import { AnimatedText } from './ui/AnimatedText';
 import { ContactButton } from './ui/Buttons';
+import { TechOrbit } from './ui/TechOrbit';
 import { personalInfo, decorative3D } from '../data/portfolioData';
 
 interface AboutSectionProps {
@@ -70,7 +71,7 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
       />
 
       {/* Centered Contents */}
-      <div className="relative z-20 flex flex-col items-center max-w-4xl text-center">
+      <div className="relative z-20 flex flex-col items-center w-full max-w-4xl text-center">
         <FadeIn y={40} delay={0} duration={0.8}>
           <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center text-[3rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] select-none mb-10 sm:mb-14 md:mb-16">
             VỀ TÔI
@@ -79,8 +80,18 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
 
         <AnimatedText
           text={personalInfo.bioLong}
-          className="text-text-primary font-medium text-center leading-relaxed text-base sm:text-lg md:text-xl lg:text-2xl max-w-[720px] mb-16 sm:mb-20 md:mb-24 select-none"
+          className="text-text-primary font-medium text-center leading-relaxed text-base sm:text-lg md:text-xl lg:text-2xl max-w-[720px] mb-12 sm:mb-16 select-none"
         />
+
+        {/* Interactive Tech Orbit Canvas */}
+        <FadeIn y={30} delay={0.2} duration={0.8} className="w-full mb-12 sm:mb-16 overflow-hidden">
+          <div className="w-full bg-[#141414]/25 border border-white/5 backdrop-blur-sm rounded-[2rem] p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <span className="text-[10px] font-bold text-text-primary/40 uppercase tracking-widest block mb-4 font-sans select-none">
+              ⚛️ Rê chuột để đẩy / Click để kích hoạt quỹ đạo công nghệ
+            </span>
+            <TechOrbit />
+          </div>
+        </FadeIn>
 
         <FadeIn y={20} delay={0.1} duration={0.8}>
           <ContactButton onClick={onOpenContact} label="LIÊN HỆ NGAY" />

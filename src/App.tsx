@@ -6,6 +6,8 @@ import { ServicesSection } from './components/ServicesSection';
 import { ProjectsSection } from './components/ProjectsSection';
 import { ContactModal } from './components/ContactModal';
 import { CursorGlow } from './components/ui/CursorGlow';
+import { ScrollNav } from './components/ui/ScrollNav';
+import { SoundToggle } from './components/ui/SoundToggle';
 
 function App() {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -16,8 +18,10 @@ function App() {
   return (
     <div className="bg-dark min-h-screen w-full text-white font-sans overflow-x-clip relative">
 
-      {/* Global Cursor Glow Effect */}
+      {/* Global Helper Elements */}
       <CursorGlow />
+      <ScrollNav />
+      <SoundToggle />
 
       {/* 1. Hero Section */}
       <HeroSection onOpenContact={openContact} />

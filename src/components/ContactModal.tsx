@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { personalInfo } from '../data/portfolioData';
+import { playSuccessSound, playClickSound, playHoverSound } from '../utils/soundEffects';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -75,6 +76,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
         setSubmissions(updated);
 
         setSuccess(true);
+        playSuccessSound();
         setFullName("");
         setPhone("");
         setEmail("");
@@ -93,6 +95,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
         setSubmissions(updated);
 
         setSuccess(true);
+        playSuccessSound();
         setFullName("");
         setPhone("");
         setEmail("");
@@ -122,7 +125,11 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
             {/* Close Button */}
             <div className="absolute top-6 right-6 flex items-center gap-3">
               <button
-                onClick={onClose}
+                onClick={() => {
+                  playClickSound();
+                  onClose();
+                }}
+                onMouseEnter={playHoverSound}
                 className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 border border-white/10 hover:bg-white/10 active:scale-95 transition-all"
               >
                 <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -166,7 +173,11 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
                   </p>
                 )}
                 <button
-                  onClick={() => setSuccess(false)}
+                  onClick={() => {
+                    playClickSound();
+                    setSuccess(false);
+                  }}
+                  onMouseEnter={playHoverSound}
                   className="mt-6 bg-white text-black text-sm font-semibold rounded-full px-6 py-2 hover:bg-white/90 active:scale-95 transition-all"
                 >
                   Gửi tin nhắn khác
@@ -271,6 +282,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
                 <button
                   type="submit"
                   disabled={isSubmitting}
+                  onMouseEnter={playHoverSound}
                   className="mt-4 bg-white text-black font-semibold text-sm rounded-full py-3.5 flex items-center justify-center gap-2 hover:bg-white/90 active:scale-95 disabled:bg-white/50 disabled:scale-100 transition-all duration-200"
                 >
                   {isSubmitting ? (
