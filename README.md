@@ -116,3 +116,31 @@ function doGet(e) {
 4. Liên kết với tài khoản GitHub của bạn, tìm Repository vừa tạo và chọn **Import**.
 5. Trong phần *Framework Preset*, Vercel sẽ tự động nhận diện dự án là **Vite**. Nhấn nút **Deploy** mà không cần thay đổi cấu hình nào khác.
 6. Mỗi khi bạn thực hiện `git push` mã nguồn mới lên GitHub, Vercel sẽ tự động biên dịch và cập nhật trang web.
+
+---
+
+## 🚀 Hướng dẫn triển khai lên Netlify
+
+Bạn cũng hoàn toàn có thể chạy dự án này trên **Netlify** cực kỳ đơn giản theo hai cách:
+
+### Cách 1: Triển khai qua GitHub (Tự động cập nhật - Khuyên dùng)
+1. Đăng nhập vào [Netlify](https://www.netlify.com/).
+2. Chọn **Add new site** -> Chọn **Import an existing project** (Nhập từ dự án có sẵn).
+3. Chọn **GitHub** làm nhà cung cấp Git và đăng nhập.
+4. Tìm kiếm và chọn Repository của dự án `LandingPage_Animation01` mà bạn đã đẩy lên GitHub ở phần trên.
+5. Cấu hình cài đặt Build (Netlify sẽ tự động nhận diện dự án Vite, bạn chỉ cần kiểm tra xem thông tin đã đúng chưa):
+   - **Build command** (Lệnh build): `npm run build`
+   - **Publish directory** (Thư mục xuất bản): `dist`
+6. Nhấp vào nút **Deploy site** (Triển khai trang web). Netlify sẽ tiến hành biên dịch và cung cấp tên miền ngẫu nhiên cho bạn sau vài giây.
+
+### Cách 2: Triển khai thủ công (Kéo và thả thư mục `dist`)
+Nếu bạn không muốn liên kết với GitHub, bạn có thể triển khai trực tiếp bằng tay:
+1. Mở terminal trong thư mục dự án và chạy lệnh build cục bộ để tạo thư mục xuất bản:
+   ```bash
+   npm run build
+   ```
+2. Sau khi build xong, một thư mục tên là **`dist`** sẽ xuất hiện trong thư mục dự án.
+3. Truy cập vào [Netlify Sites](https://app.netlify.com/teams/your-team-name/sites) (sau khi đã đăng nhập).
+4. Kéo thư mục **`dist`** của dự án thả trực tiếp vào ô *"Want to deploy a new site without connecting to Git? Drag and drop your site folder here"* ở dưới cùng của trang quản trị Netlify.
+5. Netlify sẽ tải tệp lên và chạy trang web của bạn ngay lập tức!
+
