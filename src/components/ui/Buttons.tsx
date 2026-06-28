@@ -1,7 +1,8 @@
+import React from 'react';
 import { playHoverSound, playClickSound } from '../../utils/soundEffects';
 
 interface ButtonProps {
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   label?: string;
   className?: string;
 }
@@ -13,9 +14,9 @@ export const ContactButton = ({
 }: ButtonProps) => {
   return (
     <button
-      onClick={() => {
+      onClick={(e) => {
         playClickSound();
-        onClick?.();
+        onClick?.(e);
       }}
       onMouseEnter={playHoverSound}
       className={`rounded-full uppercase font-medium tracking-widest text-white active:scale-95 transition-all duration-200 px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base ${className}`}
@@ -38,9 +39,9 @@ export const LiveProjectButton = ({
 }: ButtonProps) => {
   return (
     <button
-      onClick={() => {
+      onClick={(e) => {
         playClickSound();
-        onClick?.();
+        onClick?.(e);
       }}
       onMouseEnter={playHoverSound}
       className={`rounded-full border-2 border-text-primary text-text-primary font-medium uppercase tracking-widest hover:bg-text-primary/10 active:scale-95 transition-all duration-200 px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base ${className}`}

@@ -89,7 +89,7 @@ export const projects = [
     num: "01",
     category: "Lập trình Web",
     name: "Nextlevel Studio (Web App)",
-    liveUrl: "#",
+    liveUrl: "https://github.com",
     // Images: Web app dashboard, dark UI, code editor theme
     images: {
       col1_1: "https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=800&q=85&fit=crop",
@@ -101,7 +101,7 @@ export const projects = [
     num: "02",
     category: "Thiết kế UI/UX",
     name: "Aura Design System",
-    liveUrl: "#",
+    liveUrl: "https://www.figma.com",
     // Images: UI mockup on device, Figma-style design, component library
     images: {
       col1_1: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=85&fit=crop",
@@ -113,7 +113,7 @@ export const projects = [
     num: "03",
     category: "Phát triển Fullstack",
     name: "Solaris Digital Portal",
-    liveUrl: "#",
+    liveUrl: "https://www.netlify.com",
     // Images: Server/backend, API terminal, full-stack architecture
     images: {
       col1_1: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=85&fit=crop",

@@ -78,13 +78,14 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onMouseEnter={playHoverSound}
+        onClick={() => window.open(project.liveUrl, '_blank')}
         style={{
           scale,
           rotateX: tiltX,
           rotateY: tiltY,
           transformStyle: "preserve-3d" // Enable 3D depth rendering
         }}
-        className="w-full h-full border-2 border-text-primary/20 bg-[#0C0C0C] rounded-[30px] sm:rounded-[40px] md:rounded-[50px] lg:rounded-[60px] p-4 sm:p-6 md:p-8 flex flex-col justify-between shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden transition-shadow duration-300 hover:shadow-[0_40px_85px_rgba(118,33,176,0.25)] relative"
+        className="w-full h-full border-2 border-text-primary/20 bg-[#0C0C0C] rounded-[30px] sm:rounded-[40px] md:rounded-[50px] lg:rounded-[60px] p-4 sm:p-6 md:p-8 flex flex-col justify-between shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden transition-shadow duration-300 hover:shadow-[0_40px_85px_rgba(118,33,176,0.25)] relative cursor-pointer"
       >
         {/* Neon border highlight sweep */}
         <div
@@ -112,7 +113,13 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
               </h3>
             </div>
           </div>
-          <LiveProjectButton label="XEM DỰ ÁN" />
+          <LiveProjectButton
+            label="XEM DỰ ÁN"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(project.liveUrl, '_blank');
+            }}
+          />
         </div>
 
         {/* Image Grid with 3D layers - Parallax Z Layer 2 & 3 */}
