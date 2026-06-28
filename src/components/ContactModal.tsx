@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { personalInfo } from '../data/portfolioData';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -22,26 +23,21 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
   const [projectType, setProjectType] = useState("ui-ux");
   const [message, setMessage] = useState("");
 
-  const [sheetUrl, setSheetUrl] = useState("");
-  const [showSettings, setShowSettings] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
 
-  useEffect(() => {
-    const savedUrl = localStorage.getItem("khoa_portfolio_sheet_url") || "";
-    setSheetUrl(savedUrl);
+  const sheetUrl = personalInfo.googleSheetUrl;
+  const hasSheetUrl =
+    sheetUrl &&
+    sheetUrl !== "YOUR_GOOGLE_SHEETS_APPS_SCRIPT_URL" &&
+    sheetUrl.startsWith("http");
 
+  useEffect(() => {
     const savedSubs = JSON.parse(localStorage.getItem("khoa_portfolio_submissions") || "[]");
     setSubmissions(savedSubs);
   }, [isOpen]);
-
-  const saveSheetUrl = (url: string) => {
-    localStorage.setItem("khoa_portfolio_sheet_url", url);
-    setSheetUrl(url);
-    setShowSettings(false);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +59,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
       timestamp: new Date().toLocaleString("vi-VN"),
     };
 
-    if (sheetUrl) {
+    if (hasSheetUrl) {
       try {
         await fetch(sheetUrl, {
           method: "POST",
@@ -90,7 +86,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
         setIsSubmitting(false);
       }
     } else {
-      // Local simulation
+      // Local simulation when Google Sheets URL is not configured yet
       setTimeout(() => {
         const updated = [payload, ...submissions];
         localStorage.setItem("khoa_portfolio_submissions", JSON.stringify(updated));
@@ -104,11 +100,6 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
         setIsSubmitting(false);
       }, 1200);
     }
-  };
-
-  const clearSubmissions = () => {
-    localStorage.removeItem("khoa_portfolio_submissions");
-    setSubmissions([]);
   };
 
   return (
@@ -128,18 +119,8 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className="w-full max-w-xl bg-[#141414] border border-[#2d2d2d] rounded-[2rem] p-6 md:p-8 text-white relative my-8"
           >
-            {/* Close / Settings */}
+            {/* Close Button */}
             <div className="absolute top-6 right-6 flex items-center gap-3">
-              <button
-                onClick={() => setShowSettings(!showSettings)}
-                className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 border border-white/10 hover:bg-white/10 active:scale-95 transition-all"
-                title="Cấu hình Google Sheet"
-              >
-                <svg className="h-5 w-5 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                </svg>
-              </button>
               <button
                 onClick={onClose}
                 className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 border border-white/10 hover:bg-white/10 active:scale-95 transition-all"
@@ -161,44 +142,6 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
               </p>
             </div>
 
-            {/* Google Sheets Config Drawer */}
-            <AnimatePresence>
-              {showSettings && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="overflow-hidden border-b border-white/10 mb-6 pb-6 text-left"
-                >
-                  <div className="bg-white/5 rounded-xl p-4 flex flex-col gap-3 border border-white/10">
-                    <label className="text-xs font-semibold text-white/80">
-                      Link Google Sheet Web App (Apps Script):
-                    </label>
-                    <input
-                      type="url"
-                      placeholder="https://script.google.com/macros/s/.../exec"
-                      defaultValue={sheetUrl}
-                      onBlur={(e) => saveSheetUrl(e.target.value)}
-                      className="bg-black border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-white/30 w-full"
-                    />
-                    <div className="flex justify-between items-center mt-1">
-                      <p className="text-[10px] text-white/50 leading-relaxed max-w-[80%] font-sans">
-                        *Dữ liệu sẽ được lưu tự động lên Sheet của bạn. Nếu trống, dữ liệu được lưu tạm cục bộ trong trình duyệt.
-                      </p>
-                      {submissions.length > 0 && (
-                        <button
-                          onClick={clearSubmissions}
-                          className="text-[10px] text-red-400 hover:text-red-300 font-semibold cursor-pointer"
-                        >
-                          Xóa lịch sử
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
             {/* Success View */}
             {success ? (
               <motion.div
@@ -217,7 +160,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
                 <p className="text-sm text-white/70 max-w-sm font-sans font-light leading-relaxed">
                   Cảm ơn bạn đã liên hệ. Khoa sẽ phản hồi bạn qua Email hoặc Số điện thoại trong vòng 24 giờ tới.
                 </p>
-                {sheetUrl && (
+                {hasSheetUrl && (
                   <p className="text-xs text-green-400 font-sans font-semibold">
                     [Đã gửi dữ liệu trực tiếp vào Google Sheet]
                   </p>

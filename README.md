@@ -72,11 +72,13 @@ function doGet(e) {
 5. Cấp quyền truy cập nếu Google yêu cầu (Nhấp vào *Xem xét quyền hạn* -> Chọn tài khoản Google của bạn -> Nhấp *Nâng cao* -> Chọn *Đi tới dự án (không an toàn)* -> Nhấp *Cho phép*).
 6. Sao chép **URL của ứng dụng web** (có dạng `https://script.google.com/macros/s/.../exec`).
 
-### Bước 4: Nhúng vào website
-1. Truy cập Portfolio của bạn -> Bấm vào nút **LIÊN HỆ NGAY**.
-2. Nhấp vào **biểu tượng bánh răng cấu hình** ở góc trên cùng bên phải của biểu mẫu.
-3. Dán đường dẫn URL vừa sao chép ở Bước 3 vào ô nhập liệu -> Nhấp chuột ra ngoài để tự động lưu (dữ liệu sẽ được lưu trong trình duyệt của bạn).
-4. Thử điền thông tin và gửi form để kiểm tra kết quả ghi nhận trong Google Sheet của bạn!
+### Bước 4: Cấu hình vào mã nguồn
+1. Mở file `src/data/portfolioData.ts`.
+2. Tìm dòng `googleSheetUrl` và điền URL vừa sao chép ở Bước 3 vào:
+   ```typescript
+   googleSheetUrl: "https://script.google.com/macros/s/.../exec",
+   ```
+3. Sau khi lưu file, dữ liệu liên hệ từ website sẽ tự động được gửi và ghi nhận trong bảng tính Google Sheet của bạn!
 
 ---
 

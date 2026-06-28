@@ -7,6 +7,8 @@ export const personalInfo = {
   bioShort: "sinh viên công nghệ thông tin & nhà thiết kế web đam mê kiến tạo các trang web tối ưu, tương tác và hiện đại",
   bioLong: "Tôi là sinh viên chuyên ngành Công nghệ thông tin, tập trung phát triển lập trình Web (Frontend Development), thiết kế UI/UX và xây dựng các giao diện tương tác mượt mà. Tôi thực sự yêu thích việc đồng hành cùng các dự án, doanh nghiệp muốn tối ưu hiệu năng trang web và tạo dựng hình ảnh chuyên nghiệp nhất trên không gian mạng. Hãy cùng nhau tạo nên những điều phi thường!",
   email: "khoa.itdeveloper@gmail.com",
+  // Dán link Web App Google Apps Script của bạn vào đây
+  googleSheetUrl: "https://script.google.com/macros/s/AKfycby0pooV1gtYcCavHqp2KDLMDGHkuQ1ZSm5ajtEqzsxXZ_t3s9NN0vIfRaxpp7n74aFY/exec",
 };
 
 export const navLinks = [
