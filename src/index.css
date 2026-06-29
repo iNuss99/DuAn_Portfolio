@@ -592,6 +592,23 @@ body,
   background: rgba(182, 0, 168, 0.6);
 }
 
+/* Background Mesh Drift Animation Helper Classes */
+.animate-mesh-drift-1 {
+  animation: mesh-drift-1 18s ease-in-out infinite;
+}
+.animate-mesh-drift-2 {
+  animation: mesh-drift-2 22s ease-in-out infinite;
+}
+.animate-mesh-drift-3 {
+  animation: mesh-drift-3 20s ease-in-out infinite;
+}
+.animate-mesh-drift-4 {
+  animation: mesh-drift-4 16s ease-in-out infinite;
+}
+.animate-mesh-drift-5 {
+  animation: mesh-drift-5 24s ease-in-out infinite;
+}
+
 /* =============================================
    Reduce Motion (Accessibility)
    ============================================= */

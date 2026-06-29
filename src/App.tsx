@@ -12,6 +12,7 @@ import { CursorGlow } from './components/ui/CursorGlow';
 import { ScrollNav } from './components/ui/ScrollNav';
 import { CyberDock } from './components/ui/CyberDock';
 import { Preloader } from './components/ui/Preloader';
+import { CyberBackground } from './components/ui/CyberBackground';
 import { socialLinks, navLinks } from './data/portfolioData';
 import { playClickSound, playHoverSound } from './utils/soundEffects';
 import * as Icons from 'lucide-react';
@@ -44,14 +45,8 @@ function App() {
           className="bg-dark min-h-screen w-full text-white font-body overflow-x-clip relative noise-overlay"
         >
 
-      {/* Ambient Mesh Glow Blobs (V5.0) */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="ambient-glow-1 opacity-70" />
-        <div className="ambient-glow-2 opacity-60" />
-        <div className="ambient-glow-3 opacity-50" />
-        <div className="ambient-glow-4 opacity-40" />
-        <div className="ambient-glow-5 opacity-30" />
-      </div>
+      {/* Premium Cyber Grid & Mesh Glow Background */}
+      <CyberBackground />
 
       {/* Global Helper Elements */}
       <CursorGlow />
