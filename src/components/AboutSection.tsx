@@ -1,12 +1,10 @@
 import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { FadeIn } from './ui/FadeIn';
 import { AnimatedText } from './ui/AnimatedText';
 import { ContactButton } from './ui/Buttons';
-import { TechCube3D } from './ui/TechCube3D';
 import { ParticleSphere3D } from './ui/ParticleSphere3D';
 import { personalInfo, decorative3D, skills, timeline } from '../data/portfolioData';
-import { playClickSound, playHoverSound } from '../utils/soundEffects';
 
 interface AboutSectionProps {
   onOpenContact: () => void;
@@ -68,14 +66,6 @@ const SkillBar = ({ name, level, index }: { name: string; level: number; index: 
 };
 
 export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
-  const [activeTab, setActiveTab] = useState<'orbit' | 'sphere'>('orbit');
-
-  const switchTab = (tab: 'orbit' | 'sphere') => {
-    if (tab === activeTab) return;
-    playClickSound();
-    setActiveTab(tab);
-  };
-
   return (
     <section id="about" className="relative w-full min-h-screen bg-dark flex flex-col items-center justify-center px-5 sm:px-8 md:px-10 py-24 overflow-hidden z-20 noise-overlay">
       
@@ -193,66 +183,13 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
           </div>
         </div>
 
-        {/* Tab Selection Header */}
-        <FadeIn y={20} delay={0.1} duration={0.8} className="flex gap-4 mb-6 z-30 relative select-none">
-          <button
-            onClick={() => switchTab('orbit')}
-            onMouseEnter={playHoverSound}
-            className={`px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 border ${
-              activeTab === 'orbit'
-                ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.25)]'
-                : 'bg-transparent text-white/50 border-white/10 hover:text-white hover:border-white/30'
-            }`}
-          >
-            📦 Hộp công nghệ 3D
-          </button>
-          <button
-            onClick={() => switchTab('sphere')}
-            onMouseEnter={playHoverSound}
-            className={`px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 border ${
-              activeTab === 'sphere'
-                ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.25)]'
-                : 'bg-transparent text-white/50 border-white/10 hover:text-white hover:border-white/30'
-            }`}
-          >
-            🔮 Quả cầu số 3D
-          </button>
-        </FadeIn>
-
-        {/* Tab Panel Content */}
+        {/* Upgraded 3D Particle Sphere */}
         <FadeIn y={30} delay={0.2} duration={0.8} className="w-full mb-12 sm:mb-16 overflow-hidden">
           <div className="w-full bg-[#141414]/25 border border-white/5 backdrop-blur-sm rounded-[2rem] p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] min-h-[380px] flex flex-col justify-start">
-            <AnimatePresence mode="wait">
-              {activeTab === 'orbit' ? (
-                <motion.div
-                  key="orbit"
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.25 }}
-                  className="w-full"
-                >
-                  <span className="text-[10px] font-bold text-text-primary/40 uppercase tracking-widest block mb-4 font-heading select-none">
-                    📦 Nhấp và kéo chuột để xoay khối hộp công nghệ 3D tự do
-                  </span>
-                  <TechCube3D />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="sphere"
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.25 }}
-                  className="w-full"
-                >
-                  <span className="text-[10px] font-bold text-text-primary/40 uppercase tracking-widest block mb-4 font-heading select-none">
-                    🔮 Nhấp và kéo chuột để xoay quả cầu hạt 3D tự do (rê chuột tương tác)
-                  </span>
-                  <ParticleSphere3D />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <span className="text-[10px] font-bold text-text-primary/40 uppercase tracking-widest block mb-4 font-heading select-none">
+              🔮 Nhấp và kéo chuột để xoay quả cầu hạt 3D tự do (rê chuột tương tác)
+            </span>
+            <ParticleSphere3D />
           </div>
         </FadeIn>
 

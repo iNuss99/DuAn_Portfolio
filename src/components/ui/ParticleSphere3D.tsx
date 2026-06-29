@@ -7,6 +7,7 @@ interface Particle3D {
   z: number;
   baseSize: number;
   color: string;
+  glow: string;
 }
 
 export const ParticleSphere3D = () => {
@@ -26,16 +27,20 @@ export const ParticleSphere3D = () => {
   const animFrameId = useRef<number>(0);
   
   // Constants
-  const PARTICLE_COUNT = 320;
-  const SPHERE_RADIUS = 130;
-  const PERSPECTIVE = 300;
+  const PARTICLE_COUNT = 550; // Increased count for detail
+  const SPHERE_RADIUS = 145; // Slightly larger for impact
+  const PERSPECTIVE = 320;
   const particles = useRef<Particle3D[]>([]);
 
-  // Initialize particles once on sphere shell
+  // Concentric 3D gyro rings points
+  const ring1Points = useRef<{x: number, y: number, z: number}[]>([]);
+  const ring2Points = useRef<{x: number, y: number, z: number}[]>([]);
+
+  // Initialize particles once on sphere shell & rings
   useEffect(() => {
-    particles.current = Array.from({ length: PARTICLE_COUNT }, () => {
-      // Uniform distribution on sphere using Fibonacci spiral method
-      const idx = Math.random() * PARTICLE_COUNT;
+    // Sphere particles
+    particles.current = Array.from({ length: PARTICLE_COUNT }, (_, idx) => {
+      // Golden ratio spiral distribution on sphere (Fibonacci sphere)
       const theta = Math.acos(-1 + (2 * idx) / PARTICLE_COUNT);
       const phi = Math.sqrt(PARTICLE_COUNT * Math.PI) * theta;
 
@@ -43,22 +48,63 @@ export const ParticleSphere3D = () => {
       const y = SPHERE_RADIUS * Math.sin(theta) * Math.sin(phi);
       const z = SPHERE_RADIUS * Math.cos(theta);
 
-      // Determine size and color (gradient-like feeling)
-      const baseSize = Math.random() * 1.5 + 1.0;
+      // Determine size
+      const baseSize = Math.random() * 1.8 + 0.8;
       
-      // Randomly assign accents: magenta, purple, orange, or cyan
-      const rand = Math.random();
+      // Cyber neon color distribution based on latitude (y coordinate)
+      // Cyan at the poles, magenta at the equator, purple in between
+      const normY = Math.abs(y / SPHERE_RADIUS); // 0 (equator) to 1 (poles)
       let color = "182, 0, 168"; // accent-magenta
-      if (rand < 0.25) color = "118, 33, 176"; // accent-purple
-      else if (rand < 0.5) color = "190, 76, 0"; // accent-orange
-      else if (rand < 0.75) color = "6, 182, 212"; // cyan
+      let glow = "rgba(182, 0, 168, 0.4)";
+      
+      if (normY > 0.65) {
+        color = "6, 182, 212"; // Cyber Cyan (#06B6D4)
+        glow = "rgba(6, 182, 212, 0.4)";
+      } else if (normY > 0.3) {
+        color = "118, 33, 176"; // Deep Purple
+        glow = "rgba(118, 33, 176, 0.4)";
+      } else {
+        // Equator gets magenta/orange mix
+        if (Math.random() < 0.25) {
+          color = "190, 76, 0"; // accent-orange
+          glow = "rgba(190, 76, 0, 0.4)";
+        }
+      }
 
-      return { x, y, z, baseSize, color };
+      return { x, y, z, baseSize, color, glow };
     });
+
+    // Outer gyro rings (3D circles)
+    const RING_POINTS_COUNT = 60;
+    const ring1: {x: number, y: number, z: number}[] = [];
+    const ring2: {x: number, y: number, z: number}[] = [];
+    const ring1Radius = SPHERE_RADIUS * 1.25;
+    const ring2Radius = SPHERE_RADIUS * 1.25;
+
+    for (let i = 0; i < RING_POINTS_COUNT; i++) {
+      const angle = (i / RING_POINTS_COUNT) * Math.PI * 2;
+      
+      // Ring 1 in X-Z plane
+      ring1.push({
+        x: ring1Radius * Math.cos(angle),
+        y: 0,
+        z: ring1Radius * Math.sin(angle)
+      });
+
+      // Ring 2 in Y-Z plane
+      ring2.push({
+        x: 0,
+        y: ring2Radius * Math.cos(angle),
+        z: ring2Radius * Math.sin(angle)
+      });
+    }
+
+    ring1Points.current = ring1;
+    ring2Points.current = ring2;
   }, []);
 
-  // 3D rotation math helper
-  const rotateX3D = (p: Particle3D, angle: number) => {
+  // 3D rotation math helpers
+  const rotateX3D = (p: {x: number, y: number, z: number}, angle: number) => {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
     const y1 = p.y * cos - p.z * sin;
@@ -67,13 +113,22 @@ export const ParticleSphere3D = () => {
     p.z = z1;
   };
 
-  const rotateY3D = (p: Particle3D, angle: number) => {
+  const rotateY3D = (p: {x: number, y: number, z: number}, angle: number) => {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
     const x1 = p.x * cos - p.z * sin;
     const z1 = p.z * cos + p.x * sin;
     p.x = x1;
     p.z = z1;
+  };
+
+  const rotateZ3D = (p: {x: number, y: number, z: number}, angle: number) => {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    const x1 = p.x * cos - p.y * sin;
+    const y1 = p.y * cos + p.x * sin;
+    p.x = x1;
+    p.y = y1;
   };
 
   // Main render loop
@@ -88,7 +143,7 @@ export const ParticleSphere3D = () => {
       const parent = containerRef.current;
       if (!parent) return;
       canvas.width = parent.clientWidth;
-      canvas.height = 360;
+      canvas.height = 420; // Slightly taller for gyro rings
     };
 
     resize();
@@ -100,39 +155,163 @@ export const ParticleSphere3D = () => {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
 
-      // Apply auto-rotation if not dragging
+      // Draw Holographic Grid Background inside Sphere boundary
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, SPHERE_RADIUS * 1.35, 0, Math.PI * 2);
+      ctx.clip();
+      
+      // Draw grid lines inside clip
+      ctx.strokeStyle = "rgba(182, 0, 168, 0.015)";
+      ctx.lineWidth = 1;
+      for (let x = centerX - SPHERE_RADIUS * 1.5; x < centerX + SPHERE_RADIUS * 1.5; x += 15) {
+        ctx.beginPath();
+        ctx.moveTo(x, centerY - SPHERE_RADIUS * 1.5);
+        ctx.lineTo(x, centerY + SPHERE_RADIUS * 1.5);
+        ctx.stroke();
+      }
+      for (let y = centerY - SPHERE_RADIUS * 1.5; y < centerY + SPHERE_RADIUS * 1.5; y += 15) {
+        ctx.beginPath();
+        ctx.moveTo(centerX - SPHERE_RADIUS * 1.5, y);
+        ctx.lineTo(centerX + SPHERE_RADIUS * 1.5, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Draw Glowing Core at Center
+      const glowGrad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, SPHERE_RADIUS * 0.5);
+      glowGrad.addColorStop(0, 'rgba(182, 0, 168, 0.16)');
+      glowGrad.addColorStop(0.3, 'rgba(118, 33, 176, 0.08)');
+      glowGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = glowGrad;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, SPHERE_RADIUS * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Gentle auto-rotation around a diagonal axis if not dragging
       if (!isDragging) {
-        angleX.current = 0.003;
-        angleY.current = 0.004;
+        // Multi-axis rotation speeds
+        angleX.current = 0.002;
+        angleY.current = 0.0035;
       }
 
-      // Rotate all particles
+      // Rotate sphere particles
       for (const p of particles.current) {
         if (angleX.current !== 0) rotateX3D(p, angleX.current);
         if (angleY.current !== 0) rotateY3D(p, angleY.current);
       }
 
-      // Reset step velocity back to idle speed dampening
+      // Rotate Gyro Rings (Ring 1 and Ring 2 rotate differently)
+      for (const p of ring1Points.current) {
+        // Ring 1 rotates slightly faster
+        rotateY3D(p, isDragging ? angleY.current : 0.005);
+        rotateX3D(p, isDragging ? angleX.current : 0.001);
+      }
+      for (const p of ring2Points.current) {
+        // Ring 2 rotates opposite and around different axes
+        rotateX3D(p, isDragging ? angleX.current : 0.004);
+        rotateZ3D(p, isDragging ? angleY.current * 0.5 : 0.002);
+      }
+
+      // Dampen velocity to zero if dragging (updated frame by frame via mousemove)
       if (isDragging) {
         angleX.current = 0;
         angleY.current = 0;
       }
 
-      // Sort particles by depth (Z index) so front ones render on top of back ones
+      // Project Gyro Rings to 2D
+      const projRing1 = ring1Points.current.map(p => {
+        const scale = PERSPECTIVE / (PERSPECTIVE + p.z);
+        return {
+          sx: centerX + p.x * scale,
+          sy: centerY + p.y * scale,
+          opacity: Math.max(0.08, 1 - (p.z + SPHERE_RADIUS * 1.3) / (2.6 * SPHERE_RADIUS) * 0.8),
+          z: p.z
+        };
+      });
+
+      const projRing2 = ring2Points.current.map(p => {
+        const scale = PERSPECTIVE / (PERSPECTIVE + p.z);
+        return {
+          sx: centerX + p.x * scale,
+          sy: centerY + p.y * scale,
+          opacity: Math.max(0.08, 1 - (p.z + SPHERE_RADIUS * 1.3) / (2.6 * SPHERE_RADIUS) * 0.8),
+          z: p.z
+        };
+      });
+
+      // Draw back segments of Ring 1 & Ring 2 (Z > 0)
+      ctx.lineWidth = 0.8;
+      ctx.shadowBlur = 0;
+      
+      const drawRingSegments = (projPoints: typeof projRing1, colorStr: string) => {
+        for (let i = 0; i < projPoints.length; i++) {
+          const p1 = projPoints[i];
+          const p2 = projPoints[(i + 1) % projPoints.length];
+          
+          // Connect consecutive points on the ring
+          const midZ = (p1.z + p2.z) / 2;
+          const avgOpacity = (p1.opacity + p2.opacity) / 2;
+          
+          ctx.beginPath();
+          ctx.moveTo(p1.sx, p1.sy);
+          ctx.lineTo(p2.sx, p2.sy);
+          
+          // Highlight with higher opacity in front (Z < 0) and dim in back (Z > 0)
+          ctx.strokeStyle = `rgba(${colorStr}, ${avgOpacity * (midZ > 0 ? 0.15 : 0.45)})`;
+          ctx.stroke();
+
+          // Draw small decorative nodes on the ring at intervals
+          if (i % 6 === 0) {
+            ctx.beginPath();
+            ctx.arc(p1.sx, p1.sy, 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${colorStr}, ${p1.opacity * (p1.z > 0 ? 0.2 : 0.7)})`;
+            ctx.fill();
+          }
+        }
+      };
+
+      // Draw Ring 1 (Cyan/Blue Theme)
+      drawRingSegments(projRing1, "6, 182, 212");
+      // Draw Ring 2 (Magenta/Purple Theme)
+      drawRingSegments(projRing2, "182, 0, 168");
+
+      // Sort sphere particles by depth (Z index) so front ones render on top of back ones
       const sortedParticles = [...particles.current].sort((a, b) => b.z - a.z);
 
       // Project and draw particles
       const projected = sortedParticles.map(p => {
         // Perspective scaling
         const scale = PERSPECTIVE / (PERSPECTIVE + p.z);
-        const sx = centerX + p.x * scale;
-        const sy = centerY + p.y * scale;
+        let sx = centerX + p.x * scale;
+        let sy = centerY + p.y * scale;
 
         // Depth calculations for opacity and size
-        // p.z is from -SPHERE_RADIUS to +SPHERE_RADIUS
         const depthNormalized = (p.z + SPHERE_RADIUS) / (2 * SPHERE_RADIUS); // 0 (front) to 1 (back)
-        const opacity = Math.max(0.12, 1 - depthNormalized * 0.75);
-        const size = p.baseSize * scale * (1.3 - depthNormalized * 0.5);
+        let opacity = Math.max(0.12, 1 - depthNormalized * 0.75);
+        let size = p.baseSize * scale * (1.3 - depthNormalized * 0.55);
+
+        // --- MAGNETIC MOUSE PUSH (RIPPLE EFFECT) ---
+        if (isHovered.current) {
+          const dx = sx - mouseCanvasPos.current.x;
+          const dy = sy - mouseCanvasPos.current.y;
+          const mouseDist = Math.sqrt(dx * dx + dy * dy);
+
+          if (mouseDist < 90 && mouseDist > 0) {
+            // Push intensity decays linearly
+            const force = (90 - mouseDist) / 90;
+            // Particles push away in 2D space
+            const pushX = (dx / mouseDist) * force * 16 * (p.z < 0 ? 1.3 : 0.6); // Front particles push more
+            const pushY = (dy / mouseDist) * force * 16 * (p.z < 0 ? 1.3 : 0.6);
+
+            sx += pushX;
+            sy += pushY;
+            
+            // Highlight hovered particles
+            opacity = Math.min(1.0, opacity * 1.35);
+            size *= 1.25;
+          }
+        }
 
         return {
           p,
@@ -146,7 +325,7 @@ export const ParticleSphere3D = () => {
 
       // Draw connection lines in 3D space to avoid 2D spaghetti overlaps
       // Only connect particles that are close in 3D distance
-      const maxDistance3D = 48;
+      const maxDistance3D = 38; // Slightly tighter connection limit for denser look
       for (let i = 0; i < projected.length; i++) {
         const p1 = projected[i];
         for (let j = i + 1; j < projected.length; j++) {
@@ -159,14 +338,14 @@ export const ParticleSphere3D = () => {
           const dist3D = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
           if (dist3D < maxDistance3D) {
-            const lineOpacity = (1 - dist3D / maxDistance3D) * 0.14 * Math.min(p1.opacity, p2.opacity);
+            const lineOpacity = (1 - dist3D / maxDistance3D) * 0.16 * Math.min(p1.opacity, p2.opacity);
             ctx.beginPath();
             ctx.moveTo(p1.sx, p1.sy);
             ctx.lineTo(p2.sx, p2.sy);
             
-            // Set connection line color based on particle colors
+            // Interpolate line colors or use accent-magenta
             ctx.strokeStyle = `rgba(182, 0, 168, ${lineOpacity})`;
-            ctx.lineWidth = 0.5;
+            ctx.lineWidth = 0.55;
             ctx.stroke();
           }
         }
@@ -177,14 +356,14 @@ export const ParticleSphere3D = () => {
           const mdy = p1.sy - mouseCanvasPos.current.y;
           const mouseDist = Math.sqrt(mdx * mdx + mdy * mdy);
 
-          if (mouseDist < 80) {
-            // Draw a connection to the mouse pointer
-            const mouseLineOpacity = (1 - mouseDist / 80) * 0.25 * p1.opacity;
+          if (mouseDist < 85) {
+            // Draw a connection from particle to the mouse pointer
+            const mouseLineOpacity = (1 - mouseDist / 85) * 0.28 * p1.opacity;
             ctx.beginPath();
             ctx.moveTo(p1.sx, p1.sy);
             ctx.lineTo(mouseCanvasPos.current.x, mouseCanvasPos.current.y);
             ctx.strokeStyle = `rgba(${p1.p.color}, ${mouseLineOpacity})`;
-            ctx.lineWidth = 0.7;
+            ctx.lineWidth = 0.75;
             ctx.stroke();
           }
         }
@@ -195,10 +374,10 @@ export const ParticleSphere3D = () => {
         ctx.beginPath();
         ctx.arc(item.sx, item.sy, item.size, 0, Math.PI * 2);
         
-        // Add subtle radial glow around front dots
+        // Add subtle glowing shadow around front dots
         if (item.z < 0) {
           ctx.shadowBlur = 6;
-          ctx.shadowColor = `rgba(${item.p.color}, ${item.opacity * 0.5})`;
+          ctx.shadowColor = `rgba(${item.p.color}, ${item.opacity * 0.55})`;
         } else {
           ctx.shadowBlur = 0;
         }
@@ -210,10 +389,17 @@ export const ParticleSphere3D = () => {
       // Reset shadow for subsequent drawings
       ctx.shadowBlur = 0;
 
+      // Draw central holographic gyroscope rings on top of back particles, but below front ones
+      // Since we already drew rings, it gives a nice integrated 3D layered depth!
+
+      animRef();
+    };
+
+    const animRef = () => {
       animFrameId.current = requestAnimationFrame(draw);
     };
 
-    animFrameId.current = requestAnimationFrame(draw);
+    animRef();
 
     return () => {
       cancelAnimationFrame(animFrameId.current);
@@ -244,7 +430,7 @@ export const ParticleSphere3D = () => {
     const deltaY = e.clientY - lastMousePos.current.y;
 
     // Apply rotation based on mouse drag velocity
-    const sensitivity = 0.007;
+    const sensitivity = 0.008;
     angleY.current = deltaX * sensitivity;
     angleX.current = -deltaY * sensitivity;
 
