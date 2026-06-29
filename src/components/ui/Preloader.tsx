@@ -6,21 +6,8 @@ interface PreloaderProps {
   onComplete: () => void;
 }
 
-const BOOT_LOGS = [
-  "SYSTEM: INITIALIZING KHOA-IT OS V5.0...",
-  "CORE: LOADING GRAPHICAL SHELL & SHADERS...",
-  "SECURITY: SECURING WORKSPACE API ACCESS...",
-  "API: ESTABLISHING GOOGLE SHEETS CONNECTION...",
-  "DATABASE: PARSING PORTFOLIO DATA STRUCTURES...",
-  "GRAPHICS: SYNCHRONIZING INTERACTIVE 3D CANVAS...",
-  "UI: STABILIZING FRAME RATE PIPELINE...",
-  "OS: DEPLOYING USER INTERFACE OBJECTS...",
-  "SYSTEM: BOOT SEQUENCE SUCCESSFUL [OK]"
-];
-
 export const Preloader = ({ onComplete }: PreloaderProps) => {
   const [progress, setProgress] = useState(0);
-  const [logs, setLogs] = useState<string[]>([]);
   const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
@@ -35,9 +22,7 @@ export const Preloader = ({ onComplete }: PreloaderProps) => {
       const nextProgress = Math.min(Math.round((currentStep / steps) * 100), 100);
       setProgress(nextProgress);
 
-      const logIndex = Math.floor((nextProgress / 100) * BOOT_LOGS.length);
-      const currentLogsToShow = BOOT_LOGS.slice(0, Math.max(1, logIndex));
-      setLogs(currentLogsToShow);
+
 
       if (nextProgress < 100) {
         progressTimer = setTimeout(updateProgress, interval);
@@ -71,17 +56,7 @@ export const Preloader = ({ onComplete }: PreloaderProps) => {
         {/* Background Grid Lines (Top half) */}
         <div className="absolute inset-0 opacity-[0.02] bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
         
-        {/* Diagnostics (Top Left & Right) */}
-        <div className="absolute top-6 sm:top-12 left-6 sm:left-12 text-[9px] text-white/30 text-left">
-          <div>HOST: KHOA.PORTFOLIO</div>
-          <div>LOC: VIETNAM // CORE</div>
-          <div>STATUS: BOOTING</div>
-        </div>
-        <div className="absolute top-6 sm:top-12 right-6 sm:right-12 text-[9px] text-white/30 text-right">
-          <div>PORT: 8080</div>
-          <div>DEV: ACTIVE</div>
-          <div>{new Date().toLocaleDateString('vi-VN')}</div>
-        </div>
+
       </motion.div>
 
       {/* 2. BOTTOM CURTAIN PANEL */}
@@ -102,10 +77,8 @@ export const Preloader = ({ onComplete }: PreloaderProps) => {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="flex-1 flex flex-col justify-between p-6 sm:p-12 md:p-16 relative z-10 w-full h-full pointer-events-auto"
+            className="flex-1 flex flex-col justify-center p-6 sm:p-12 md:p-16 relative z-10 w-full h-full pointer-events-auto"
           >
-            {/* Filler space for alignment */}
-            <div className="h-10" />
 
             {/* Center Cinematic Title & Progress */}
             <div className="flex flex-col items-center justify-center relative">
@@ -146,34 +119,7 @@ export const Preloader = ({ onComplete }: PreloaderProps) => {
               </div>
             </div>
 
-            {/* Bottom System Console Logs */}
-            <div className="w-full max-w-xl mx-auto bg-[#0a0a0a]/30 border border-white/5 rounded-2xl p-4 md:p-5 text-left h-[100px] sm:h-[120px] flex flex-col gap-1 relative z-10">
-              <div className="flex items-center gap-1.5 border-b border-white/5 pb-2 mb-2 text-[8px] uppercase text-white/20 font-bold tracking-widest">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#EE0F0F] animate-pulse" />
-                <span className="font-mono">SYS.BOOT // LOG_STREAM</span>
-              </div>
 
-              <div className="flex-1 flex flex-col gap-0.5 text-[9px] overflow-y-auto custom-scrollbar font-mono text-white/40 select-text pr-2 leading-relaxed">
-                {logs.map((log, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: -5 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.1 }}
-                    className={
-                      idx === logs.length - 1 
-                        ? log.includes("SUCCESSFUL") || log.includes("[OK]") 
-                          ? "text-green-400 font-bold" 
-                          : "text-[#FF0055]" 
-                        : "text-white/40"
-                    }
-                  >
-                    <span className="text-white/20 mr-1.5">[{((idx * 0.28).toFixed(2))}s]</span>
-                    {log}
-                  </motion.div>
-                ))}
-              </div>
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
