@@ -54,8 +54,8 @@ export const CyberBackground = () => {
         style={{
           background: `radial-gradient(
             350px circle at var(--bg-mouse-x) var(--bg-mouse-y),
-            rgba(212, 175, 55, 0.08) 0%,
-            rgba(13, 148, 136, 0.04) 50%,
+            rgba(255, 0, 85, 0.12) 0%,
+            rgba(238, 15, 15, 0.06) 50%,
             transparent 100%
           )`,
         }}
@@ -63,7 +63,7 @@ export const CyberBackground = () => {
       <div 
         className="absolute inset-0 opacity-100 hidden md:block"
         style={{
-          backgroundImage: `linear-gradient(rgba(212, 175, 55, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(212, 175, 55, 0.12) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(rgba(255, 0, 85, 0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 0, 85, 0.16) 1px, transparent 1px)`,
           backgroundSize: '60px 60px',
           maskImage: `radial-gradient(280px circle at var(--bg-mouse-x) var(--bg-mouse-y), black 20%, transparent 100%)`,
           WebkitMaskImage: `radial-gradient(280px circle at var(--bg-mouse-x) var(--bg-mouse-y), black 20%, transparent 100%)`,
@@ -72,34 +72,34 @@ export const CyberBackground = () => {
 
       {/* 4. Drifting Mesh Gradient Blobs (Upgraded Premium Color Scheme) */}
       <div className="absolute inset-0 opacity-60">
-        {/* Deep Teal Glow Top Left */}
+        {/* Deep Vivid Red Glow Top Left */}
         <div 
           className="absolute top-[-10%] left-[-5%] w-[60vw] h-[60vw] rounded-full filter blur-[150px] animate-mesh-drift-1"
-          style={{ background: 'radial-gradient(circle, rgba(13, 148, 136, 0.15) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(238, 15, 15, 0.22) 0%, transparent 70%)' }}
         />
         
-        {/* Neon Champagne Gold Glow Mid Right */}
+        {/* Neon Pink/Red Glow Mid Right */}
         <div 
           className="absolute top-[35%] right-[-10%] w-[55vw] h-[55vw] rounded-full filter blur-[160px] animate-mesh-drift-2"
-          style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 75%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255, 0, 85, 0.18) 0%, transparent 75%)' }}
         />
 
-        {/* Cyber Cyan Glow Bottom Left */}
+        {/* Coral Orange Glow Bottom Left */}
         <div 
           className="absolute bottom-[10%] left-[-10%] w-[50vw] h-[50vw] rounded-full filter blur-[140px] animate-mesh-drift-3"
-          style={{ background: 'radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255, 77, 0, 0.15) 0%, transparent 70%)' }}
         />
 
-        {/* Amber Accent Glow Mid Left */}
+        {/* Rose Accent Glow Mid Left */}
         <div 
           className="absolute top-[15%] left-[20%] w-[45vw] h-[45vw] rounded-full filter blur-[130px] animate-mesh-drift-4"
-          style={{ background: 'radial-gradient(circle, rgba(190, 76, 0, 0.08) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(225, 29, 72, 0.15) 0%, transparent 70%)' }}
         />
 
-        {/* Indigo / Blue Glow Bottom Right */}
+        {/* Neon Rose Glow Bottom Right */}
         <div 
           className="absolute bottom-[-5%] right-[10%] w-[50vw] h-[50vw] rounded-full filter blur-[150px] animate-mesh-drift-5"
-          style={{ background: 'radial-gradient(circle, rgba(79, 70, 229, 0.08) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255, 0, 85, 0.12) 0%, transparent 70%)' }}
         />
       </div>
 

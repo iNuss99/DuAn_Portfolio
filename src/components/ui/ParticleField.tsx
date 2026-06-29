@@ -49,6 +49,8 @@ export const ParticleField = ({
 
     resize();
 
+    const mouse = { x: -9999, y: -9999, active: false };
+
     // Initialize particles
     particlesRef.current = Array.from({ length: particleCount }, () => ({
       x: Math.random() * canvas.width,
@@ -60,11 +62,43 @@ export const ParticleField = ({
       alphaDir: (Math.random() - 0.5) * 0.008,
     }));
 
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+      mouse.active = true;
+    };
+
+    const handleMouseLeave = () => {
+      mouse.x = -9999;
+      mouse.y = -9999;
+      mouse.active = false;
+    };
+
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const particles = particlesRef.current;
+      const repelRadius = 150;
+      const forceStrength = 1.8;
 
       for (const p of particles) {
+        // Apply interactive mouse force
+        if (mouse.active) {
+          const dx = p.x - mouse.x;
+          const dy = p.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < repelRadius) {
+            // Calculate push force based on proximity
+            const force = (repelRadius - dist) / repelRadius;
+            const angle = Math.atan2(dy, dx);
+            
+            // Push particle away from cursor
+            p.x += Math.cos(angle) * force * forceStrength;
+            p.y += Math.sin(angle) * force * forceStrength;
+          }
+        }
+
         // Update position
         p.x += p.vx;
         p.y += p.vy;
@@ -109,9 +143,16 @@ export const ParticleField = ({
     animRef.current = requestAnimationFrame(draw);
 
     window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    canvas.addEventListener('mouseleave', handleMouseLeave);
+    
     return () => {
       cancelAnimationFrame(animRef.current);
       window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (canvas) {
+        canvas.removeEventListener('mouseleave', handleMouseLeave);
+      }
     };
   }, [particleCount, color]);
 

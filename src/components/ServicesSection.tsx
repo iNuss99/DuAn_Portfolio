@@ -26,10 +26,8 @@ const ServiceCard = memo(({ service, index }: ServiceCardProps) => {
         className="service-card-glow relative w-full flex flex-col justify-between p-6 sm:p-8 rounded-[24px] bg-[#141414]/40 border border-white/5 backdrop-blur-md hover:border-accent-purple/20 transition-all duration-300 hover:shadow-card-hover group cursor-pointer"
         style={{ transformStyle: 'preserve-3d' }}
       >
-        {/* Glow spotlight on hover */}
         <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[24px] bg-[radial-gradient(400px_circle_at_var(--mouse-x,50%)_var(--mouse-y,50%),rgba(182,0,168,0.06),transparent_60%)] z-0" />
 
-        {/* Card Header: Icon & Big Number */}
         <div className="flex items-center justify-between gap-4 mb-8 z-10" style={{ transform: 'translateZ(20px)' }}>
           <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-accent-magenta group-hover:bg-accent-magenta/15 group-hover:border-accent-magenta/30 transition-all duration-300">
             <IconComponent size={24} className="group-hover:scale-110 transition-transform duration-300" />
@@ -39,7 +37,6 @@ const ServiceCard = memo(({ service, index }: ServiceCardProps) => {
           </span>
         </div>
 
-        {/* Card Body: Info */}
         <div className="text-left flex-1 flex flex-col justify-between z-10" style={{ transform: 'translateZ(30px)' }}>
           <div>
             <span className="text-[10px] font-bold tracking-widest text-accent-purple uppercase block mb-1 font-heading">
@@ -53,7 +50,6 @@ const ServiceCard = memo(({ service, index }: ServiceCardProps) => {
             </p>
           </div>
 
-          {/* Tech stack Tags */}
           <div className="flex flex-wrap gap-2 mt-auto">
             {service.tags.map((tag, i) => (
               <span
@@ -75,7 +71,7 @@ ServiceCard.displayName = 'ServiceCard';
 export const ServicesSection = () => {
   return (
     <section id="services" className="relative w-full bg-dark px-5 sm:px-8 md:px-10 py-24 sm:py-32 z-20 overflow-hidden noise-overlay border-t border-white/5">
-      
+
       {/* Background glow blobs */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="ambient-glow-1 opacity-70" />

@@ -112,8 +112,12 @@ export const projects = [
     category: "Lập trình Web",
     name: "Nextlevel Studio",
     liveUrl: "https://github.com",
+    githubUrl: "https://github.com",
     tags: ["React", "TypeScript", "Node.js", "MongoDB"],
     featured: true,
+    longDesc: "Nextlevel Studio là một nền tảng web giới thiệu và quản lý dự án dành cho các agency sáng tạo. Dự án tích hợp các hiệu ứng chuyển động phức tạp mang lại trải nghiệm mượt mà, tối ưu hóa tốc độ phản hồi và chuyển hướng trang nhanh chóng.",
+    challenge: "Tải các tài nguyên hình ảnh chất lượng cao và chạy mượt các thư viện chuyển động trên các thiết bị cấu hình thấp mà không làm tụt FPS.",
+    solution: "Sử dụng kỹ thuật Lazy Loading hình ảnh chuyên sâu kết hợp tối ưu render của React (useMemo, useCallback, React.memo) và nén định dạng ảnh sang WebP/AVIF.",
     images: {
       col1_1: "https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=800&q=85&fit=crop",
       col1_2: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&q=85&fit=crop",
@@ -125,8 +129,12 @@ export const projects = [
     category: "Thiết kế UI/UX",
     name: "Aura Design System",
     liveUrl: "https://www.figma.com",
+    githubUrl: "",
     tags: ["Figma", "Design System", "UI Kit"],
     featured: false,
+    longDesc: "Aura Design System là hệ thống thư viện thiết kế UI Kit đồng bộ, chuẩn chỉnh trên Figma giúp các designer và developer làm việc thống nhất, đẩy nhanh tốc độ thiết kế sản phẩm và phát triển giao diện phần mềm Frontend.",
+    challenge: "Thiết lập cấu trúc Variable và Token màu sắc phong phú, hỗ trợ chuyển đổi giữa Light/Dark mode tự động một cách logic và trực quan.",
+    solution: "Tận dụng tính năng Figma Variables mới nhất để tạo hệ thống màu sắc đa lớp (Primitive, Semantic, Component) kết hợp auto-layout linh hoạt.",
     images: {
       col1_1: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=85&fit=crop",
       col1_2: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=800&q=85&fit=crop",
@@ -138,8 +146,12 @@ export const projects = [
     category: "Phát triển Fullstack",
     name: "Solaris Digital Portal",
     liveUrl: "https://www.netlify.com",
+    githubUrl: "https://github.com",
     tags: ["Next.js", "Prisma", "PostgreSQL", "Vercel"],
     featured: false,
+    longDesc: "Solaris Digital Portal là cổng thông tin số hóa dịch vụ dành cho doanh nghiệp vừa và nhỏ, cung cấp khả năng thanh toán, quản lý hợp đồng, trao đổi thông tin khách hàng thời gian thực qua hệ thống WebSocket.",
+    challenge: "Đồng bộ hóa trạng thái thanh toán thời gian thực bảo mật và tối ưu truy vấn cơ sở dữ liệu khi lượng người truy cập tăng đột biến.",
+    solution: "Sử dụng Prisma ORM kết hợp PostgreSQL Connection Pooling, thiết lập cơ chế Webhook nhận phản hồi từ bên trung gian thanh toán và xử lý bất đồng bộ thông qua hàng đợi Redis.",
     images: {
       col1_1: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=85&fit=crop",
       col1_2: "https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?w=800&q=85&fit=crop",
@@ -155,15 +167,46 @@ export const stats = [
   { value: 99, suffix: "%", label: "Tỷ lệ hoàn thành", icon: "target" },
 ];
 
-
-export const skills = [
-  { name: "React / Next.js", level: 92 },
-  { name: "TypeScript", level: 88 },
-  { name: "UI/UX Design (Figma)", level: 90 },
-  { name: "Tailwind CSS / CSS3", level: 95 },
-  { name: "Framer Motion / Animation", level: 85 },
-  { name: "Node.js / Backend", level: 75 },
+export const skillsCategories = [
+  {
+    id: "frontend",
+    title: "Frontend",
+    list: [
+      { name: "React / Next.js", level: 92 },
+      { name: "TypeScript", level: 88 },
+      { name: "Tailwind CSS / CSS3", level: 95 },
+      { name: "Framer Motion", level: 85 }
+    ]
+  },
+  {
+    id: "backend",
+    title: "Backend",
+    list: [
+      { name: "Node.js / Express", level: 75 },
+      { name: "REST API / GraphQL", level: 80 },
+      { name: "SQL & NoSQL DBs", level: 78 }
+    ]
+  },
+  {
+    id: "design",
+    title: "UI/UX Design",
+    list: [
+      { name: "Figma (UI/UX)", level: 90 },
+      { name: "Wireframe / Prototype", level: 85 },
+      { name: "User Research", level: 82 }
+    ]
+  },
+  {
+    id: "tools",
+    title: "Tools & Others",
+    list: [
+      { name: "Git / GitHub", level: 90 },
+      { name: "Netlify / Vercel", level: 88 },
+      { name: "Docker / CI-CD", level: 65 }
+    ]
+  }
 ];
+
 
 export const timeline = [
   {

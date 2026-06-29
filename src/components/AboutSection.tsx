@@ -1,10 +1,11 @@
-import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { FadeIn } from './ui/FadeIn';
 import { AnimatedText } from './ui/AnimatedText';
 import { ContactButton } from './ui/Buttons';
 import { ParticleSphere3D } from './ui/ParticleSphere3D';
-import { personalInfo, decorative3D, skills, timeline } from '../data/portfolioData';
+import { personalInfo, decorative3D, skillsCategories, timeline } from '../data/portfolioData';
+import { playClickSound, playHoverSound } from '../utils/soundEffects';
 
 interface AboutSectionProps {
   onOpenContact: () => void;
@@ -37,28 +38,19 @@ const FloatingDecor = ({
 };
 
 // Skill bar component with animated entrance
-const SkillBar = ({ name, level, index }: { name: string; level: number; index: number }) => {
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setWidth(level);
-    }, 300 + index * 100);
-    return () => clearTimeout(timer);
-  }, [level, index]);
-
+const SkillBar = ({ name, level }: { name: string; level: number; index: number }) => {
   return (
     <div className="flex flex-col gap-2 w-full text-left">
       <div className="flex justify-between text-xs sm:text-sm font-semibold">
         <span className="text-text-primary tracking-wide">{name}</span>
-        <span className="text-accent-magenta font-mono">{width}%</span>
+        <span className="text-accent-magenta font-mono">{level}%</span>
       </div>
       <div className="w-full h-2 bg-white/5 border border-white/10 rounded-full overflow-hidden">
         <motion.div
           className="h-full bg-gradient-to-r from-accent-purple via-accent-magenta to-accent-orange rounded-full"
           initial={{ width: 0 }}
-          animate={{ width: `${width}%` }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          animate={{ width: `${level}%` }}
+          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>
     </div>
@@ -66,6 +58,9 @@ const SkillBar = ({ name, level, index }: { name: string; level: number; index: 
 };
 
 export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
+  const [activeTab, setActiveTab] = useState("frontend");
+  const currentCategory = skillsCategories.find(cat => cat.id === activeTab) || skillsCategories[0];
+
   return (
     <section id="about" className="relative w-full min-h-screen bg-dark flex flex-col items-center justify-center px-5 sm:px-8 md:px-10 py-24 overflow-hidden z-20 noise-overlay">
       
@@ -134,7 +129,7 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
             />
           </div>
 
-          {/* Column 2: Tech Skills & Performance bars */}
+          {/* Column 2: Tech Skills with Tabs */}
           <div className="flex flex-col gap-5 w-full bg-white/[0.02] border border-white/5 rounded-3xl p-6 sm:p-8 backdrop-blur-md">
             <FadeIn y={20} delay={0.15} duration={0.8}>
               <h3 className="font-heading text-lg sm:text-xl font-bold text-text-primary tracking-wide uppercase border-l-2 border-accent-purple pl-4 mb-2">
@@ -142,10 +137,42 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
               </h3>
             </FadeIn>
             
-            <div className="flex flex-col gap-5 w-full">
-              {skills.map((skill, index) => (
-                <SkillBar key={index} name={skill.name} level={skill.level} index={index} />
+            {/* Category Tab Buttons */}
+            <div className="flex flex-wrap gap-2 mb-4 border-b border-white/5 pb-4">
+              {skillsCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => {
+                    playClickSound();
+                    setActiveTab(cat.id);
+                  }}
+                  onMouseEnter={playHoverSound}
+                  className={`px-3.5 py-2 rounded-xl text-[10px] font-bold font-heading uppercase tracking-wider transition-all duration-200 border ${
+                    activeTab === cat.id
+                      ? "bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+                      : "bg-white/5 text-text-muted border-white/10 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  {cat.title}
+                </button>
               ))}
+            </div>
+
+            <div className="flex flex-col gap-5 w-full min-h-[180px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  transition={{ duration: 0.25 }}
+                  className="flex flex-col gap-5 w-full"
+                >
+                  {currentCategory.list.map((skill, index) => (
+                    <SkillBar key={skill.name} name={skill.name} level={skill.level} index={index} />
+                  ))}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
         </div>

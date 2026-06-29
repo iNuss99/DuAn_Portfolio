@@ -18,11 +18,11 @@ export default {
         "text-primary": "#D7E2EA",
         "text-muted": "#8A95A0",
         accent: {
-          purple: "#0D9488", // Luxury Deep Teal
-          magenta: "#D4AF37", // Metallic Champagne Gold
-          orange: "#F59E0B", // Amber
-          cyan: "#06B6D4",
-          blue: "#3B82F6",
+          purple: "#FF0055", // Neon Red/Pink
+          magenta: "#EE0F0F", // Vivid Red
+          orange: "#FF4D00", // Coral Red
+          cyan: "#FF3366", // Rose Red
+          blue: "#E11D48", // Crimson Rose
         },
         glass: {
           white: "rgba(255, 255, 255, 0.05)",
@@ -56,10 +56,10 @@ export default {
         xs: '2px',
       },
       boxShadow: {
-        'glow-purple': '0 0 20px rgba(13, 148, 136, 0.3)',
-        'glow-magenta': '0 0 20px rgba(212, 175, 55, 0.3)',
-        'glow-orange': '0 0 15px rgba(245, 158, 11, 0.3)',
-        'card-hover': '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(13, 148, 136, 0.15)',
+        'glow-purple': '0 0 20px rgba(255, 0, 85, 0.4)',
+        'glow-magenta': '0 0 20px rgba(238, 15, 15, 0.4)',
+        'glow-orange': '0 0 15px rgba(255, 77, 0, 0.4)',
+        'card-hover': '0 25px 50px rgba(0, 0, 0, 0.55), 0 0 30px rgba(238, 15, 15, 0.25)',
       },
     },
   },

@@ -1,18 +1,20 @@
-import { useRef, memo, useCallback } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useRef, memo, useCallback, useState } from 'react';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { LiveProjectButton } from './ui/Buttons';
 import { projects } from '../data/portfolioData';
 import { FadeIn } from './ui/FadeIn';
-import { playHoverSound } from '../utils/soundEffects';
+import { playHoverSound, playClickSound } from '../utils/soundEffects';
+import { ProjectDetailModal } from './ProjectDetailModal';
 
 interface ProjectCardProps {
   project: typeof projects[0];
   index: number;
   totalCards: number;
+  onCardClick: (project: typeof projects[0]) => void;
 }
 
 /** Memoized project card with sticky stacking, 3D tilt, and 3D layered parallax depth */
-const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
+const ProjectCard = memo(({ project, index, totalCards, onCardClick }: ProjectCardProps) => {
   const cardContainerRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -57,19 +59,11 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
     tiltY.set(0);
   }, [tiltX, tiltY]);
 
-  // Stack cards with an offset equal to the header height to show them as stacked tabs
-  const topOffset = 100 + index * 100;
-  // Offset the bottom boundary of each card so they don't collapse on top of each other at the bottom of the container
-  const marginBottom = (totalCards - 1 - index) * 100;
-
   return (
     <div
       ref={cardContainerRef}
-      className="h-[80vh] sm:h-[85vh] w-full flex items-center justify-center sticky"
+      className="w-full h-full flex items-center justify-center"
       style={{
-        top: `${topOffset}px`,
-        zIndex: 10 + index,
-        marginBottom: `${marginBottom}px`,
         perspective: "1200px" // Enable 3D perspective context
       }}
     >
@@ -78,7 +72,7 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onMouseEnter={playHoverSound}
-        onClick={() => window.open(project.liveUrl, '_blank')}
+        onClick={() => onCardClick(project)}
         style={{
           scale,
           rotateX: tiltX,
@@ -120,7 +114,7 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
               </h3>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3">
             {/* Tech stack Tags inside Card Header */}
             <div className="hidden sm:flex flex-wrap gap-2 mr-4">
@@ -131,10 +125,10 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
               ))}
             </div>
             <LiveProjectButton
-              label="XEM DỰ ÁN"
+              label="XEM CHI TIẾT"
               onClick={(e) => {
                 e.stopPropagation();
-                window.open(project.liveUrl, '_blank');
+                onCardClick(project);
               }}
             />
           </div>
@@ -170,7 +164,6 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
             </div>
           </div>
 
-          {/* Right Column (60%) — 1 tall image (Z: 55px) */}
           <div
             style={{ transform: "translateZ(55px)" }}
             className="flip-3d col-span-6 h-full overflow-hidden rounded-[20px] sm:rounded-[30px] border border-white/5"
@@ -190,10 +183,31 @@ const ProjectCard = memo(({ project, index, totalCards }: ProjectCardProps) => {
 
 ProjectCard.displayName = 'ProjectCard';
 
+const FILTERS = ["Tất cả", "Lập trình Web", "Thiết kế UI/UX", "Phát triển Fullstack"];
+
 export const ProjectsSection = () => {
+  const [activeFilter, setActiveFilter] = useState("Tất cả");
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCardClick = useCallback((project: any) => {
+    setSelectedProject(project);
+    setIsModalOpen(true);
+  }, []);
+
+  const handleFilterClick = (filter: string) => {
+    playClickSound();
+    setActiveFilter(filter);
+  };
+
+  const filteredProjects = projects.filter(project => {
+    if (activeFilter === "Tất cả") return true;
+    return project.category === activeFilter;
+  });
+
   return (
     <section id="projects" className="relative w-full bg-dark rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 pt-24 pb-32 -mt-10 sm:-mt-12 md:-mt-14 z-20 noise-overlay border-t border-white/5">
-      
+
       {/* Background glow blobs */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="ambient-glow-2 opacity-85" />
@@ -202,8 +216,7 @@ export const ProjectsSection = () => {
 
       <div className="max-w-5xl mx-auto flex flex-col relative z-10">
 
-        {/* Section Heading */}
-        <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-16 sm:mb-24">
+        <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-10">
           <span className="text-accent-magenta text-xs font-bold tracking-widest uppercase block mb-3 font-heading">
             ✦ Dự án thực tế / Case Studies ✦
           </span>
@@ -212,19 +225,71 @@ export const ProjectsSection = () => {
           </h2>
         </FadeIn>
 
-        {/* Stacking Cards */}
+        {/* Advanced filter tabs */}
+        <FadeIn y={20} delay={0.15} duration={0.8} className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-20">
+          {FILTERS.map((filter) => {
+            const isActive = activeFilter === filter;
+            return (
+              <button
+                key={filter}
+                onClick={() => handleFilterClick(filter)}
+                onMouseEnter={playHoverSound}
+                className={`px-5 py-2.5 rounded-full text-xs font-bold font-heading uppercase tracking-wider transition-all duration-300 border ${
+                  isActive
+                    ? "bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                    : "bg-white/5 text-text-muted border-white/10 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {filter}
+              </button>
+            );
+          })}
+        </FadeIn>
+
+        {/* Filtered stacked projects */}
         <div className="relative w-full flex flex-col gap-24 sm:gap-32 pb-12">
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={project.num}
-              project={project}
-              index={index}
-              totalCards={projects.length}
-            />
-          ))}
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.length > 0 ? (
+              filteredProjects.map((project, index) => (
+                <motion.div
+                  key={project.num}
+                  layout
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                  className="h-[80vh] sm:h-[85vh] w-full flex items-center justify-center sticky"
+                  style={{
+                    top: `${100 + index * 100}px`,
+                    zIndex: 10 + index,
+                    marginBottom: `${(filteredProjects.length - 1 - index) * 100}px`,
+                    perspective: "1200px"
+                  }}
+                >
+                  <ProjectCard
+                    project={project}
+                    index={index}
+                    totalCards={filteredProjects.length}
+                    onCardClick={handleCardClick}
+                  />
+                </motion.div>
+              ))
+            ) : (
+              <div className="w-full text-center py-20 border border-white/5 rounded-3xl bg-white/[0.01]">
+                <p className="text-sm text-text-muted">Không tìm thấy dự án nào trong danh mục này.</p>
+              </div>
+            )}
+          </AnimatePresence>
         </div>
 
       </div>
+
+      {/* Case Study Detail Modal */}
+      <ProjectDetailModal
+        project={selectedProject}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </section>
   );
 };
