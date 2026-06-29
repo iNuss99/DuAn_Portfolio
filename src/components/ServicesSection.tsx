@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { FadeIn } from './ui/FadeIn';
+import { TextReveal } from './ui/TextReveal';
 import { services } from '../data/portfolioData';
 import { playHoverSound } from '../utils/soundEffects';
 import * as Icons from 'lucide-react';
@@ -16,9 +17,10 @@ const ServiceCard = memo(({ service, index }: ServiceCardProps) => {
 
   return (
     <FadeIn
-      y={30}
-      delay={index * 0.1}
-      duration={0.7}
+      y={20}
+      x={index % 2 === 0 ? -25 : 25}
+      delay={index * 0.08}
+      duration={0.8}
       className="flex h-full"
     >
       <div
@@ -85,9 +87,10 @@ export const ServicesSection = () => {
           <span className="text-accent-magenta text-xs font-bold tracking-widest uppercase block mb-3 font-heading">
             ✦ Lĩnh vực hoạt động / Core Services ✦
           </span>
-          <h2 className="font-heading font-black uppercase leading-none tracking-tight text-[3.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] glitch-hover hero-heading">
-            DỊCH VỤ
-          </h2>
+          <TextReveal
+            text="DỊCH VỤ"
+            className="font-heading font-black uppercase leading-none tracking-tight text-[3.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] glitch-hover hero-heading"
+          />
         </FadeIn>
 
         {/* Services Card Grid */}

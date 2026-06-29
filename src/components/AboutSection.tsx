@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { FadeIn } from './ui/FadeIn';
 import { AnimatedText } from './ui/AnimatedText';
+import { TextReveal } from './ui/TextReveal';
 import { ContactButton } from './ui/Buttons';
 import { ParticleSphere3D } from './ui/ParticleSphere3D';
 import { personalInfo, decorative3D, skillsCategories, timeline } from '../data/portfolioData';
@@ -38,7 +39,7 @@ const FloatingDecor = ({
 };
 
 // Skill bar component with animated entrance
-const SkillBar = ({ name, level }: { name: string; level: number; index: number }) => {
+const SkillBar = ({ name, level, index }: { name: string; level: number; index: number }) => {
   return (
     <div className="flex flex-col gap-2 w-full text-left">
       <div className="flex justify-between text-xs sm:text-sm font-semibold">
@@ -50,7 +51,7 @@ const SkillBar = ({ name, level }: { name: string; level: number; index: number 
           className="h-full bg-gradient-to-r from-accent-purple via-accent-magenta to-accent-orange rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${level}%` }}
-          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
         />
       </div>
     </div>
@@ -108,9 +109,10 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
           <span className="text-accent-magenta text-xs font-bold tracking-widest uppercase block mb-3 font-heading">
             ✦ Khám phá bản thân / Get to know me ✦
           </span>
-          <h2 className="font-heading font-black uppercase leading-none tracking-tight text-center text-[3.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] select-none mb-14 sm:mb-20 glitch-hover hero-heading">
-            VỀ TÔI
-          </h2>
+          <TextReveal
+            text="VỀ TÔI"
+            className="font-heading font-black uppercase leading-none tracking-tight text-center text-[3.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] select-none mb-14 sm:mb-20 glitch-hover hero-heading"
+          />
         </FadeIn>
 
         {/* 2-Column Bio + Skills layout */}

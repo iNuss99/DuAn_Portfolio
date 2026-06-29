@@ -1,6 +1,7 @@
 import { marqueeImages } from '../data/portfolioData';
 import { playHoverSound } from '../utils/soundEffects';
 import { FadeIn } from './ui/FadeIn';
+import { TextReveal } from './ui/TextReveal';
 
 export const MarqueeSection = () => {
   // Duplicate items once for seamless continuous CSS looping coverage
@@ -18,9 +19,10 @@ export const MarqueeSection = () => {
           <span className="text-accent-magenta text-xs font-bold tracking-widest uppercase block mb-3 font-heading">
             ✦ Trải nghiệm tương tác / Interactive Showcase ✦
           </span>
-          <h2 className="font-heading font-black uppercase leading-none tracking-tight text-[3.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] glitch-hover hero-heading">
-            SHOWCASE
-          </h2>
+          <TextReveal
+            text="SHOWCASE"
+            className="font-heading font-black uppercase leading-none tracking-tight text-[3.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] glitch-hover hero-heading"
+          />
         </FadeIn>
       </div>
       

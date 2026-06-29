@@ -21,9 +21,9 @@ const BOOT_LOGS = [
 export const Preloader = ({ onComplete }: PreloaderProps) => {
   const [progress, setProgress] = useState(0);
   const [logs, setLogs] = useState<string[]>([]);
+  const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
-    // Sequence logic: count progress and push logs dynamically
     let progressTimer: any;
     const duration = 2400; // 2.4 seconds total boot time
     const interval = 20; // update frequency
@@ -35,7 +35,6 @@ export const Preloader = ({ onComplete }: PreloaderProps) => {
       const nextProgress = Math.min(Math.round((currentStep / steps) * 100), 100);
       setProgress(nextProgress);
 
-      // Determine which logs to show based on progress percentage
       const logIndex = Math.floor((nextProgress / 100) * BOOT_LOGS.length);
       const currentLogsToShow = BOOT_LOGS.slice(0, Math.max(1, logIndex));
       setLogs(currentLogsToShow);
@@ -44,12 +43,11 @@ export const Preloader = ({ onComplete }: PreloaderProps) => {
         progressTimer = setTimeout(updateProgress, interval);
       } else {
         // Boot completed
-        // Play the boot sound chime
         playBootSound();
-        // Wait a bit to let the user see "100%" and hear the chime, then exit
+        setIsDone(true);
         setTimeout(() => {
           onComplete();
-        }, 800);
+        }, 1000); // Give time for curtain transition
       }
     };
 
@@ -61,121 +59,125 @@ export const Preloader = ({ onComplete }: PreloaderProps) => {
   }, [onComplete]);
 
   return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ 
-        opacity: 0, 
-        y: -100,
-        transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } 
-      }}
-      className="fixed inset-0 z-[9999] bg-[#070707] flex flex-col justify-between p-6 sm:p-12 md:p-16 select-none font-mono text-white overflow-hidden"
-    >
-      {/* Background Matrix/Grid lines effect */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
+    <div className="fixed inset-0 z-[9999] overflow-hidden select-none font-mono text-white flex flex-col justify-between pointer-events-none">
       
-      {/* Radial overlay glow */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_45%,rgba(0,0,0,0.85)_100%)]" />
-
-      {/* Header Info */}
-      <div className="flex justify-between items-start text-[10px] sm:text-xs text-white/40 relative z-10">
-        <div className="flex flex-col gap-1 text-left">
-          <span>HOST: KHOA.PORTFOLIO</span>
-          <span>LOCATION: VIETNAM</span>
-          <span>STATUS: ONLINE</span>
+      {/* 1. TOP CURTAIN PANEL */}
+      <motion.div 
+        initial={{ y: 0 }}
+        exit={{ y: "-100%" }}
+        transition={{ duration: 0.95, ease: [0.76, 0, 0.24, 1], delay: 0.1 }}
+        className="absolute top-0 left-0 right-0 h-[50vh] bg-[#070707] border-b border-white/5 pointer-events-auto"
+      >
+        {/* Background Grid Lines (Top half) */}
+        <div className="absolute inset-0 opacity-[0.02] bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
+        
+        {/* Diagnostics (Top Left & Right) */}
+        <div className="absolute top-6 sm:top-12 left-6 sm:left-12 text-[9px] text-white/30 text-left">
+          <div>HOST: KHOA.PORTFOLIO</div>
+          <div>LOC: VIETNAM // CORE</div>
+          <div>STATUS: BOOTING</div>
         </div>
-        <div className="flex flex-col gap-1 text-right">
-          <span>PORT: 8080</span>
-          <span>RESOLUTION: {typeof window !== 'undefined' ? `${window.innerWidth}X${window.innerHeight}` : '1920X1080'}</span>
-          <span>DATE: {new Date().toLocaleDateString('vi-VN')}</span>
+        <div className="absolute top-6 sm:top-12 right-6 sm:right-12 text-[9px] text-white/30 text-right">
+          <div>PORT: 8080</div>
+          <div>DEV: ACTIVE</div>
+          <div>{new Date().toLocaleDateString('vi-VN')}</div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Center Hologram Ring & Percentage */}
-      <div className="flex-1 flex flex-col items-center justify-center relative z-10 gap-6 my-10">
-        <div className="relative w-40 h-40 sm:w-48 sm:h-48 flex items-center justify-center">
-          {/* Outer rotating HUD circle */}
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-            className="absolute inset-0 rounded-full border border-dashed border-accent-magenta/30"
-          />
+      {/* 2. BOTTOM CURTAIN PANEL */}
+      <motion.div 
+        initial={{ y: 0 }}
+        exit={{ y: "100%" }}
+        transition={{ duration: 0.95, ease: [0.76, 0, 0.24, 1], delay: 0.1 }}
+        className="absolute bottom-0 left-0 right-0 h-[50vh] bg-[#070707] border-t border-white/5 pointer-events-auto"
+      >
+        {/* Background Grid Lines (Bottom half) */}
+        <div className="absolute inset-0 opacity-[0.02] bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
+      </motion.div>
 
-          {/* Inner counter-rotating HUD circle */}
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ repeat: Infinity, duration: 12, ease: "linear" }}
-            className="absolute inset-2 rounded-full border border-accent-purple/20 border-t-accent-magenta/60 border-b-accent-purple/60"
-          />
+      {/* 3. CENTER CONTENT (Fades out when done) */}
+      <AnimatePresence>
+        {!isDone && (
+          <motion.div 
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="flex-1 flex flex-col justify-between p-6 sm:p-12 md:p-16 relative z-10 w-full h-full pointer-events-auto"
+          >
+            {/* Filler space for alignment */}
+            <div className="h-10" />
 
-          {/* Core glow */}
-          <div className="absolute inset-6 rounded-full bg-accent-magenta/5 filter blur-md" />
+            {/* Center Cinematic Title & Progress */}
+            <div className="flex flex-col items-center justify-center relative">
+              {/* Soft Red Ambient Radial Glow */}
+              <div className="absolute w-[300px] h-[300px] rounded-full bg-[#FF0055]/5 filter blur-[80px] -z-10 animate-pulse duration-[3s]" />
+              
+              {/* Large low-opacity counting watermark */}
+              <div className="absolute text-[12vw] font-black text-white/[0.01] tracking-widest select-none pointer-events-none select-none font-mono leading-none z-0">
+                {progress.toString().padStart(3, '0')}
+              </div>
 
-          {/* Percentage text */}
-          <div className="flex flex-col items-center justify-center">
-            <span className="text-4xl sm:text-5xl font-black font-mono tracking-tight text-white glow-text">
-              {progress.toString().padStart(3, '0')}
-              <span className="text-xs sm:text-sm text-accent-magenta">%</span>
-            </span>
-            <span className="text-[9px] uppercase tracking-widest text-white/50 mt-1 font-bold">
-              BOOTING OS
-            </span>
-          </div>
-        </div>
-
-        {/* Brand name */}
-        <div className="text-center">
-          <h2 className="font-heading font-black tracking-[0.3em] text-sm sm:text-base text-white/90 uppercase">
-            KHOA<span className="text-accent-magenta animate-pulse">.</span>DEVELOPER
-          </h2>
-        </div>
-      </div>
-
-      {/* Footer System Console Logs */}
-      <div className="w-full max-w-2xl mx-auto bg-[#0a0a0a]/80 border border-white/5 rounded-xl p-4 md:p-5 relative z-10 text-left min-h-[140px] sm:min-h-[160px] flex flex-col gap-1.5 justify-end">
-        {/* Terminal Header */}
-        <div className="flex items-center gap-1.5 border-b border-white/5 pb-2 mb-2 text-[9px] uppercase text-white/35 font-bold tracking-widest">
-          <span className="w-2 h-2 rounded-full bg-red-500/60" />
-          <span className="w-2 h-2 rounded-full bg-yellow-500/60" />
-          <span className="w-2 h-2 rounded-full bg-green-500/60" />
-          <span className="ml-2 font-mono">SYSTEM BOOT CONSOLE</span>
-        </div>
-
-        {/* Scrollable Logs list */}
-        <div className="flex-1 flex flex-col gap-1 text-[10px] sm:text-xs overflow-y-auto custom-scrollbar font-mono text-white/70 select-text pr-2">
-          <AnimatePresence>
-            {logs.map((log, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.15 }}
-                className={`leading-relaxed ${
-                  idx === logs.length - 1 
-                    ? log.includes("SUCCESSFUL") || log.includes("[OK]") 
-                      ? "text-green-400 font-bold" 
-                      : "text-accent-magenta" 
-                    : "text-white/60"
-                }`}
+              {/* Cinematic expandable title */}
+              <motion.h1 
+                initial={{ letterSpacing: "0.2em", opacity: 0 }}
+                animate={{ letterSpacing: "0.5em", opacity: 1 }}
+                transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+                className="font-heading font-black text-xl sm:text-2xl md:text-3xl tracking-[0.5em] text-white/90 uppercase text-center relative z-10 pl-[0.5em]"
               >
-                <span className="text-white/30 mr-2">[{((idx * 0.28).toFixed(2))}s]</span>
-                {log}
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+                MINH KHOA
+              </motion.h1>
 
-        {/* Progress bar */}
-        <div className="w-full h-1 bg-white/5 border border-white/10 rounded-full overflow-hidden mt-3">
-          <motion.div
-            className="h-full bg-gradient-to-r from-accent-purple via-accent-magenta to-accent-orange rounded-full"
-            style={{ width: `${progress}%` }}
-            transition={{ duration: 0.1 }}
-          />
-        </div>
-      </div>
-      
-      {/* Glitch Overlay Styling (defined in index.css) */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(182,0,168,0.03)_0%,transparent_70%)]" />
-    </motion.div>
+              <span className="text-[9px] uppercase tracking-[0.3em] text-[#FF0055] font-bold mt-2 z-10">
+                SYSTEM INITIALIZING
+              </span>
+
+              {/* Minimalist Horizontal Progress Line */}
+              <div className="w-[180px] sm:w-[240px] h-[1.5px] bg-white/5 rounded-full overflow-hidden mt-6 relative z-10">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-[#EE0F0F] via-[#FF0055] to-[#FF4D00] rounded-full"
+                  style={{ width: `${progress}%` }}
+                  transition={{ duration: 0.05 }}
+                />
+              </div>
+
+              {/* Mini electronic progress number */}
+              <div className="text-[10px] text-white/40 mt-3 font-mono">
+                [ {progress.toString().padStart(3, '0')}% ]
+              </div>
+            </div>
+
+            {/* Bottom System Console Logs */}
+            <div className="w-full max-w-xl mx-auto bg-[#0a0a0a]/30 border border-white/5 rounded-2xl p-4 md:p-5 text-left h-[100px] sm:h-[120px] flex flex-col gap-1 relative z-10">
+              <div className="flex items-center gap-1.5 border-b border-white/5 pb-2 mb-2 text-[8px] uppercase text-white/20 font-bold tracking-widest">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#EE0F0F] animate-pulse" />
+                <span className="font-mono">SYS.BOOT // LOG_STREAM</span>
+              </div>
+
+              <div className="flex-1 flex flex-col gap-0.5 text-[9px] overflow-y-auto custom-scrollbar font-mono text-white/40 select-text pr-2 leading-relaxed">
+                {logs.map((log, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, x: -5 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.1 }}
+                    className={
+                      idx === logs.length - 1 
+                        ? log.includes("SUCCESSFUL") || log.includes("[OK]") 
+                          ? "text-green-400 font-bold" 
+                          : "text-[#FF0055]" 
+                        : "text-white/40"
+                    }
+                  >
+                    <span className="text-white/20 mr-1.5">[{((idx * 0.28).toFixed(2))}s]</span>
+                    {log}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+    </div>
   );
 };

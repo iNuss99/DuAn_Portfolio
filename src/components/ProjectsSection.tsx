@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'fra
 import { LiveProjectButton } from './ui/Buttons';
 import { projects } from '../data/portfolioData';
 import { FadeIn } from './ui/FadeIn';
+import { TextReveal } from './ui/TextReveal';
 import { playHoverSound, playClickSound } from '../utils/soundEffects';
 import { ProjectDetailModal } from './ProjectDetailModal';
 
@@ -220,9 +221,10 @@ export const ProjectsSection = () => {
           <span className="text-accent-magenta text-xs font-bold tracking-widest uppercase block mb-3 font-heading">
             ✦ Dự án thực tế / Case Studies ✦
           </span>
-          <h2 className="font-heading font-black uppercase leading-none tracking-tight text-[3.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] select-none glitch-hover hero-heading">
-            DỰ ÁN
-          </h2>
+          <TextReveal
+            text="DỰ ÁN"
+            className="font-heading font-black uppercase leading-none tracking-tight text-[3.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] select-none glitch-hover hero-heading"
+          />
         </FadeIn>
 
         {/* Advanced filter tabs */}
