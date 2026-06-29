@@ -165,7 +165,7 @@ export const HeroSection = ({ onOpenContact }: HeroSectionProps) => {
             <div
               className="glow-pulse absolute inset-0 rounded-full z-0"
               style={{
-                background: 'radial-gradient(circle, rgba(118,33,176,0.4) 0%, rgba(182,0,168,0.2) 40%, transparent 70%)',
+                background: 'radial-gradient(circle, rgba(13,148,136,0.3) 0%, rgba(212,175,55,0.15) 40%, transparent 70%)',
                 filter: 'blur(50px)',
                 transform: 'scale(1.2)',
               }}
@@ -175,8 +175,8 @@ export const HeroSection = ({ onOpenContact }: HeroSectionProps) => {
             <div
               className="hologram-ring absolute inset-0 z-0 rounded-full"
               style={{
-                border: '2px solid rgba(118, 33, 176, 0.4)',
-                boxShadow: '0 0 30px rgba(118, 33, 176, 0.3), inset 0 0 25px rgba(182, 0, 168, 0.2)',
+                border: '2px solid rgba(13, 148, 136, 0.3)',
+                boxShadow: '0 0 30px rgba(13, 148, 136, 0.2), inset 0 0 25px rgba(212, 175, 55, 0.15)',
               }}
             />
 
@@ -184,9 +184,9 @@ export const HeroSection = ({ onOpenContact }: HeroSectionProps) => {
             <div
               className="scan-line absolute left-[5%] right-[5%] h-[2.5px] z-20 pointer-events-none"
               style={{
-                background: 'linear-gradient(90deg, transparent, rgba(118, 33, 176, 0.7), rgba(182, 0, 168, 0.9), rgba(118, 33, 176, 0.7), transparent)',
+                background: 'linear-gradient(90deg, transparent, rgba(13, 148, 136, 0.6), rgba(212, 175, 55, 0.8), rgba(13, 148, 136, 0.6), transparent)',
                 filter: 'blur(1px)',
-                boxShadow: '0 0 15px rgba(182, 0, 168, 0.7)',
+                boxShadow: '0 0 15px rgba(212, 175, 55, 0.6)',
               }}
             />
 

@@ -34,12 +34,12 @@ body,
   background: #0C0C0C;
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #B600A8, #7621B0);
+  background: linear-gradient(180deg, #D4AF37, #0D9488);
   border-radius: 4px;
   border: 2px solid #0C0C0C;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #BE4C00, #B600A8);
+  background: linear-gradient(180deg, #F59E0B, #D4AF37);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -87,9 +87,9 @@ body,
   background: linear-gradient(
     90deg,
     #D7E2EA 0%,
-    #B600A8 30%,
-    #7621B0 50%,
-    #B600A8 70%,
+    #D4AF37 30%,
+    #0D9488 50%,
+    #D4AF37 70%,
     #D7E2EA 100%
   );
   background-size: 200% 100%;
@@ -133,10 +133,10 @@ body,
   border-radius: inherit;
   background: linear-gradient(
     135deg,
-    rgba(118, 33, 176, 0.4),
-    rgba(182, 0, 168, 0.4),
-    rgba(190, 76, 0, 0.3),
-    rgba(118, 33, 176, 0.4)
+    rgba(13, 148, 136, 0.4),
+    rgba(212, 175, 55, 0.4),
+    rgba(245, 158, 11, 0.3),
+    rgba(13, 148, 136, 0.4)
   );
   background-size: 300% 300%;
   animation: border-flow 6s ease infinite;
@@ -564,16 +564,16 @@ body,
 .glow-text {
   text-shadow: 
     0 0 8px rgba(255, 255, 255, 0.4),
-    0 0 20px rgba(182, 0, 168, 0.8),
-    0 0 40px rgba(118, 33, 176, 0.6);
+    0 0 20px rgba(212, 175, 55, 0.8),
+    0 0 40px rgba(13, 148, 136, 0.6);
 }
 
 .glow-shadow-magenta {
-  box-shadow: 0 0 30px rgba(182, 0, 168, 0.25);
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.25);
 }
 
 .glow-shadow-purple {
-  box-shadow: 0 0 30px rgba(118, 33, 176, 0.25);
+  box-shadow: 0 0 30px rgba(13, 148, 136, 0.25);
 }
 
 /* Custom styling for preloader terminal log container */
@@ -585,11 +585,11 @@ body,
   border-radius: 2px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(182, 0, 168, 0.3);
+  background: rgba(212, 175, 55, 0.3);
   border-radius: 2px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(182, 0, 168, 0.6);
+  background: rgba(212, 175, 55, 0.6);
 }
 
 /* Background Mesh Drift Animation Helper Classes */

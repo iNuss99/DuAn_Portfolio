@@ -54,20 +54,20 @@ export const ParticleSphere3D = () => {
       // Cyber neon color distribution based on latitude (y coordinate)
       // Cyan at the poles, magenta at the equator, purple in between
       const normY = Math.abs(y / SPHERE_RADIUS); // 0 (equator) to 1 (poles)
-      let color = "182, 0, 168"; // accent-magenta
-      let glow = "rgba(182, 0, 168, 0.4)";
+      let color = "212, 175, 55"; // accent-gold
+      let glow = "rgba(212, 175, 55, 0.4)";
       
       if (normY > 0.65) {
         color = "6, 182, 212"; // Cyber Cyan (#06B6D4)
         glow = "rgba(6, 182, 212, 0.4)";
       } else if (normY > 0.3) {
-        color = "118, 33, 176"; // Deep Purple
-        glow = "rgba(118, 33, 176, 0.4)";
+        color = "13, 148, 136"; // Deep Teal
+        glow = "rgba(13, 148, 136, 0.4)";
       } else {
-        // Equator gets magenta/orange mix
+        // Equator gets gold/amber mix
         if (Math.random() < 0.25) {
-          color = "190, 76, 0"; // accent-orange
-          glow = "rgba(190, 76, 0, 0.4)";
+          color = "245, 158, 11"; // accent-amber
+          glow = "rgba(245, 158, 11, 0.4)";
         }
       }
 
@@ -162,7 +162,7 @@ export const ParticleSphere3D = () => {
       ctx.clip();
       
       // Draw grid lines inside clip
-      ctx.strokeStyle = "rgba(182, 0, 168, 0.015)";
+      ctx.strokeStyle = "rgba(212, 175, 55, 0.02)";
       ctx.lineWidth = 1;
       for (let x = centerX - SPHERE_RADIUS * 1.5; x < centerX + SPHERE_RADIUS * 1.5; x += 15) {
         ctx.beginPath();
@@ -180,8 +180,8 @@ export const ParticleSphere3D = () => {
 
       // Draw Glowing Core at Center
       const glowGrad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, SPHERE_RADIUS * 0.5);
-      glowGrad.addColorStop(0, 'rgba(182, 0, 168, 0.16)');
-      glowGrad.addColorStop(0.3, 'rgba(118, 33, 176, 0.08)');
+      glowGrad.addColorStop(0, 'rgba(212, 175, 55, 0.16)');
+      glowGrad.addColorStop(0.3, 'rgba(13, 148, 136, 0.08)');
       glowGrad.addColorStop(1, 'transparent');
       ctx.fillStyle = glowGrad;
       ctx.beginPath();
@@ -273,8 +273,8 @@ export const ParticleSphere3D = () => {
 
       // Draw Ring 1 (Cyan/Blue Theme)
       drawRingSegments(projRing1, "6, 182, 212");
-      // Draw Ring 2 (Magenta/Purple Theme)
-      drawRingSegments(projRing2, "182, 0, 168");
+      // Draw Ring 2 (Champagne Gold Theme)
+      drawRingSegments(projRing2, "212, 175, 55");
 
       // Sort sphere particles by depth (Z index) so front ones render on top of back ones
       const sortedParticles = [...particles.current].sort((a, b) => b.z - a.z);
@@ -343,8 +343,8 @@ export const ParticleSphere3D = () => {
             ctx.moveTo(p1.sx, p1.sy);
             ctx.lineTo(p2.sx, p2.sy);
             
-            // Interpolate line colors or use accent-magenta
-            ctx.strokeStyle = `rgba(182, 0, 168, ${lineOpacity})`;
+            // Interpolate line colors or use accent-gold
+            ctx.strokeStyle = `rgba(212, 175, 55, ${lineOpacity})`;
             ctx.lineWidth = 0.55;
             ctx.stroke();
           }

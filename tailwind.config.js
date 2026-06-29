@@ -18,9 +18,9 @@ export default {
         "text-primary": "#D7E2EA",
         "text-muted": "#8A95A0",
         accent: {
-          purple: "#7621B0",
-          magenta: "#B600A8",
-          orange: "#BE4C00",
+          purple: "#0D9488", // Luxury Deep Teal
+          magenta: "#D4AF37", // Metallic Champagne Gold
+          orange: "#F59E0B", // Amber
           cyan: "#06B6D4",
           blue: "#3B82F6",
         },
@@ -56,10 +56,10 @@ export default {
         xs: '2px',
       },
       boxShadow: {
-        'glow-purple': '0 0 20px rgba(118, 33, 176, 0.3)',
-        'glow-magenta': '0 0 20px rgba(182, 0, 168, 0.3)',
-        'glow-orange': '0 0 15px rgba(190, 76, 0, 0.3)',
-        'card-hover': '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(118, 33, 176, 0.15)',
+        'glow-purple': '0 0 20px rgba(13, 148, 136, 0.3)',
+        'glow-magenta': '0 0 20px rgba(212, 175, 55, 0.3)',
+        'glow-orange': '0 0 15px rgba(245, 158, 11, 0.3)',
+        'card-hover': '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(13, 148, 136, 0.15)',
       },
     },
   },
