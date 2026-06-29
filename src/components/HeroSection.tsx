@@ -74,19 +74,47 @@ const Counter = ({ value, suffix }: { value: number; suffix: string }) => {
 export const HeroSection = ({ onOpenContact }: HeroSectionProps) => {
   const sectionRef = useRef<HTMLElement>(null);
   const [typedTitle, setTypedTitle] = useState('');
-  const fullTitle = personalInfo.title; // "Jack -- IT & Web Designer"
+  const fullTitle = personalInfo.title; // "Khoa -- IT & Web Designer"
 
   useEffect(() => {
-    let index = 0;
+    let active = true;
+    let iteration = 0;
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%#@$&*";
+    
+    // Sci-fi Matrix Decode scramble effect
     const interval = setInterval(() => {
-      setTypedTitle((prev) => prev + fullTitle.charAt(index));
-      index++;
-      if (index >= fullTitle.length) {
+      if (!active) return;
+
+      setTypedTitle(
+        fullTitle
+          .split("")
+          .map((char, index) => {
+            if (char === " ") return " ";
+            if (index < iteration) {
+              return fullTitle[index];
+            }
+            if (index === Math.floor(iteration)) {
+              return chars[Math.floor(Math.random() * chars.length)];
+            }
+            return "";
+          })
+          .join("")
+      );
+
+      // Increment decoding cursor
+      iteration += 0.35;
+
+      if (iteration >= fullTitle.length) {
+        setTypedTitle(fullTitle);
         clearInterval(interval);
       }
-    }, 75);
-    return () => clearInterval(interval);
-  }, []);
+    }, 30);
+
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  }, [fullTitle]);
 
   // Parallax scroll effects
   const { scrollYProgress } = useScroll({
@@ -140,9 +168,9 @@ export const HeroSection = ({ onOpenContact }: HeroSectionProps) => {
           </div>
         </FadeIn>
 
-        {/* Dynamic Typing Title */}
+        {/* Dynamic Matrix Scramble Title */}
         <FadeIn y={-10} delay={0.25} duration={0.7} className="mb-2 h-6">
-          <p className="text-accent-magenta font-heading text-xs sm:text-sm md:text-base font-bold tracking-widest uppercase typing-cursor">
+          <p className="text-accent-magenta font-mono text-xs sm:text-sm md:text-base font-black tracking-widest uppercase typing-cursor">
             {typedTitle}
           </p>
         </FadeIn>
