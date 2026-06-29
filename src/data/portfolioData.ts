@@ -1,4 +1,4 @@
-// Centralized assets and copy database for Khoa's IT & Web Design Portfolio
+// Centralized assets and copy database for Khoa's IT & Web Design Portfolio — V5.0
 
 export const personalInfo = {
   name: "Khoa",
@@ -18,6 +18,13 @@ export const navLinks = [
   { label: "Liên hệ", href: "#contact" }
 ];
 
+export const socialLinks = [
+  { name: "GitHub", url: "https://github.com", icon: "github" },
+  { name: "LinkedIn", url: "https://linkedin.com", icon: "linkedin" },
+  { name: "Facebook", url: "https://facebook.com", icon: "facebook" },
+  { name: "Instagram", url: "https://instagram.com", icon: "instagram" },
+];
+
 export const decorative3D = {
   // We keep the premium decorative 3D assets and portrait as they add dynamic depth to the web portfolio
   portrait: "https://shrug-person-78902957.figma.site/_components/v2/d24c01ad3a56fc65e942a1f501eb73db42d7cf9a/Rectangle_40443.81459862.png",
@@ -28,59 +35,74 @@ export const decorative3D = {
 };
 
 export const marqueeImages = {
-  // GIF assets from motionsites.ai represent web-design & UI/UX template previews, which fit web design perfectly
+  // GIF assets from motionsites.ai representing premium UI/UX design mockups
   row1: [
-    "https://motionsites.ai/assets/hero-space-voyage-preview-eECLH3Yc.gif",
-    "https://motionsites.ai/assets/hero-codenest-preview-Cgppc2qV.gif",
-    "https://motionsites.ai/assets/hero-vex-ventures-preview-BczMFIiw.gif",
-    "https://motionsites.ai/assets/hero-stellar-ai-v2-preview-DjvxjG3C.gif",
-    "https://motionsites.ai/assets/hero-asme-preview-B_nGDnTP.gif",
-    "https://motionsites.ai/assets/hero-transform-data-preview-Cx5OU29N.gif",
-    "https://motionsites.ai/assets/hero-vitara-preview-Cjz2QYyU.gif",
-    "https://motionsites.ai/assets/hero-terra-preview-BFjrCr7T.gif",
-    "https://motionsites.ai/assets/hero-skyelite-preview-DHaZIgUv.gif",
-    "https://motionsites.ai/assets/hero-aethera-preview-DknSlcTa.gif",
-    "https://motionsites.ai/assets/hero-designpro-preview-D8c5_een.gif",
+    { url: "https://motionsites.ai/assets/hero-space-voyage-preview-eECLH3Yc.gif", tag: "Space Voyager Landing" },
+    { url: "https://motionsites.ai/assets/hero-codenest-preview-Cgppc2qV.gif", tag: "Code Nest Editor" },
+    { url: "https://motionsites.ai/assets/hero-vex-ventures-preview-BczMFIiw.gif", tag: "Venture Capital Portal" },
+    { url: "https://motionsites.ai/assets/hero-stellar-ai-v2-preview-DjvxjG3C.gif", tag: "Stellar AI Platform v2" },
+    { url: "https://motionsites.ai/assets/hero-asme-preview-B_nGDnTP.gif", tag: "ASME Tech Agency" },
+    { url: "https://motionsites.ai/assets/hero-transform-data-preview-Cx5OU29N.gif", tag: "Data Analysis Dashboard" },
+    { url: "https://motionsites.ai/assets/hero-vitara-preview-Cjz2QYyU.gif", tag: "Vitara SaaS UI" },
+    { url: "https://motionsites.ai/assets/hero-terra-preview-BFjrCr7T.gif", tag: "Terra Ecology Web" },
+    { url: "https://motionsites.ai/assets/hero-skyelite-preview-DHaZIgUv.gif", tag: "SkyElite Agency Portfolio" },
+    { url: "https://motionsites.ai/assets/hero-aethera-preview-DknSlcTa.gif", tag: "Aethera Web3 Portal" },
+    { url: "https://motionsites.ai/assets/hero-designpro-preview-D8c5_een.gif", tag: "DesignPro Marketplace" },
   ],
   row2: [
-    "https://motionsites.ai/assets/hero-stellar-ai-preview-D3HL6bw1.gif",
-    "https://motionsites.ai/assets/hero-xportfolio-preview-D4A8maiC.gif",
-    "https://motionsites.ai/assets/hero-orbit-web3-preview-BXt4OttD.gif",
-    "https://motionsites.ai/assets/hero-nexora-preview-cx5HmUgo.gif",
-    "https://motionsites.ai/assets/hero-evr-ventures-preview-DZxeVFEX.gif",
-    "https://motionsites.ai/assets/hero-planet-orbit-preview-DWAP8Z1P.gif",
-    "https://motionsites.ai/assets/hero-new-era-preview-CocuDUm9.gif",
-    "https://motionsites.ai/assets/hero-wealth-preview-B70idl_u.gif",
-    "https://motionsites.ai/assets/hero-luminex-preview-CxOP7ce6.gif",
-    "https://motionsites.ai/assets/hero-celestia-preview-0yO3jXO8.gif",
+    { url: "https://motionsites.ai/assets/hero-stellar-ai-preview-D3HL6bw1.gif", tag: "Stellar AI Web App" },
+    { url: "https://motionsites.ai/assets/hero-xportfolio-preview-D4A8maiC.gif", tag: "Creative 3D Portfolio" },
+    { url: "https://motionsites.ai/assets/hero-orbit-web3-preview-BXt4OttD.gif", tag: "Orbit Web3 Interface" },
+    { url: "https://motionsites.ai/assets/hero-nexora-preview-cx5HmUgo.gif", tag: "Nexora Tech Hub" },
+    { url: "https://motionsites.ai/assets/hero-evr-ventures-preview-DZxeVFEX.gif", tag: "EVR Ventures Site" },
+    { url: "https://motionsites.ai/assets/hero-planet-orbit-preview-DWAP8Z1P.gif", tag: "Planet Orbit Web Design" },
+    { url: "https://motionsites.ai/assets/hero-new-era-preview-CocuDUm9.gif", tag: "New Era Design Studio" },
+    { url: "https://motionsites.ai/assets/hero-wealth-preview-B70idl_u.gif", tag: "Wealth Fintech Platform" },
+    { url: "https://motionsites.ai/assets/hero-luminex-preview-CxOP7ce6.gif", tag: "Luminex SaaS Landing" },
+    { url: "https://motionsites.ai/assets/hero-celestia-preview-0yO3jXO8.gif", tag: "Celestia Crypto Dashboard" },
   ]
 };
 
 export const services = [
   {
     num: "01",
-    name: "Thiết kế UI/UX (UI/UX Design)",
-    desc: "Nghiên cứu hành vi người dùng, thiết kế wireframe và tạo ra các giao diện trực quan, tối giản, tối ưu hóa tối đa trải nghiệm của khách hàng."
+    name: "Thiết kế UI/UX",
+    subtitle: "UI/UX Design",
+    desc: "Nghiên cứu hành vi người dùng, thiết kế wireframe và tạo ra các giao diện trực quan, tối giản, tối ưu hóa tối đa trải nghiệm của khách hàng.",
+    icon: "palette",
+    tags: ["Figma", "Wireframe", "Prototype", "User Research"],
   },
   {
     num: "02",
-    name: "Lập trình Frontend (Frontend Dev)",
-    desc: "Chuyển đổi giao diện thiết kế thành mã nguồn sạch bằng React, TypeScript và Tailwind CSS, tối ưu tốc độ tải trang và độ tương thích di động."
+    name: "Lập trình Frontend",
+    subtitle: "Frontend Development",
+    desc: "Chuyển đổi giao diện thiết kế thành mã nguồn sạch bằng React, TypeScript và Tailwind CSS, tối ưu tốc độ tải trang và độ tương thích di động.",
+    icon: "code",
+    tags: ["React", "TypeScript", "Tailwind CSS", "Next.js"],
   },
   {
     num: "03",
-    name: "Thiết kế Tương tác (Interactive Design)",
-    desc: "Tích hợp các hiệu ứng chuyển động mượt mà (Framer Motion, CSS 3D) giúp trang web trở nên sống động, thu hút người dùng ở lại lâu hơn."
+    name: "Thiết kế Tương tác",
+    subtitle: "Interactive Design",
+    desc: "Tích hợp các hiệu ứng chuyển động mượt mà (Framer Motion, CSS 3D) giúp trang web trở nên sống động, thu hút người dùng ở lại lâu hơn.",
+    icon: "sparkles",
+    tags: ["Framer Motion", "CSS 3D", "GSAP", "Lottie"],
   },
   {
     num: "04",
-    name: "Lập trình Backend & API",
-    desc: "Xây dựng máy chủ dữ liệu vững chắc, tích hợp cổng thanh toán, hệ quản trị nội dung hoặc kết xuất tự động về Google Sheets."
+    name: "Lập trình Backend",
+    subtitle: "Backend & API",
+    desc: "Xây dựng máy chủ dữ liệu vững chắc, tích hợp cổng thanh toán, hệ quản trị nội dung hoặc kết xuất tự động về Google Sheets.",
+    icon: "server",
+    tags: ["Node.js", "REST API", "Database", "Cloud"],
   },
   {
     num: "05",
-    name: "Phát triển Fullstack Web Apps",
-    desc: "Xây dựng các ứng dụng web phức tạp từ khâu lên ý tưởng thiết kế giao diện cho đến lập trình cơ sở dữ liệu hoàn chỉnh, vận hành tối ưu."
+    name: "Phát triển Fullstack",
+    subtitle: "Fullstack Web Apps",
+    desc: "Xây dựng các ứng dụng web phức tạp từ khâu lên ý tưởng thiết kế giao diện cho đến lập trình cơ sở dữ liệu hoàn chỉnh, vận hành tối ưu.",
+    icon: "layers",
+    tags: ["Full Stack", "DevOps", "CI/CD", "Agile"],
   }
 ];
 
@@ -88,9 +110,10 @@ export const projects = [
   {
     num: "01",
     category: "Lập trình Web",
-    name: "Nextlevel Studio (Web App)",
+    name: "Nextlevel Studio",
     liveUrl: "https://github.com",
-    // Images: Web app dashboard, dark UI, code editor theme
+    tags: ["React", "TypeScript", "Node.js", "MongoDB"],
+    featured: true,
     images: {
       col1_1: "https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=800&q=85&fit=crop",
       col1_2: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&q=85&fit=crop",
@@ -102,7 +125,8 @@ export const projects = [
     category: "Thiết kế UI/UX",
     name: "Aura Design System",
     liveUrl: "https://www.figma.com",
-    // Images: UI mockup on device, Figma-style design, component library
+    tags: ["Figma", "Design System", "UI Kit"],
+    featured: false,
     images: {
       col1_1: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=85&fit=crop",
       col1_2: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=800&q=85&fit=crop",
@@ -114,11 +138,77 @@ export const projects = [
     category: "Phát triển Fullstack",
     name: "Solaris Digital Portal",
     liveUrl: "https://www.netlify.com",
-    // Images: Server/backend, API terminal, full-stack architecture
+    tags: ["Next.js", "Prisma", "PostgreSQL", "Vercel"],
+    featured: false,
     images: {
       col1_1: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=85&fit=crop",
       col1_2: "https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?w=800&q=85&fit=crop",
       col2: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1280&q=85&fit=crop"
     }
   }
+];
+
+export const stats = [
+  { value: 20, suffix: "+", label: "Dự án hoàn thành", icon: "briefcase" },
+  { value: 15, suffix: "+", label: "Khách hàng hài lòng", icon: "users" },
+  { value: 3, suffix: "+", label: "Năm kinh nghiệm", icon: "clock" },
+  { value: 99, suffix: "%", label: "Tỷ lệ hoàn thành", icon: "target" },
+];
+
+export const testimonials = [
+  {
+    name: "Nguyễn Minh Tuấn",
+    role: "CEO, TechViet Solutions",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80&fit=crop&crop=face",
+    content: "Khoa đã thiết kế cho chúng tôi một trang web vượt xa mong đợi. Giao diện đẹp mắt, hiệu ứng mượt mà và luôn bàn giao đúng hạn. Rất chuyên nghiệp!",
+    rating: 5,
+  },
+  {
+    name: "Trần Thu Hà",
+    role: "Marketing Director, CreativeHub",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&fit=crop&crop=face",
+    content: "Làm việc với Khoa là trải nghiệm tuyệt vời. Khả năng biến ý tưởng thành giao diện thực tế rất ấn tượng. Website mới giúp doanh thu tăng 40%.",
+    rating: 5,
+  },
+  {
+    name: "Lê Hoàng Nam",
+    role: "Founder, StartupVN",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80&fit=crop&crop=face",
+    content: "Khoa không chỉ code giỏi mà còn có con mắt thiết kế rất tinh tế. Mọi chi tiết đều được chăm chút kỹ lưỡng. Chắc chắn sẽ hợp tác lâu dài!",
+    rating: 5,
+  },
+  {
+    name: "Phạm Thị Lan",
+    role: "Product Owner, FinSmart",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80&fit=crop&crop=face",
+    content: "Trang web dashboard mà Khoa xây dựng đã giúp team chúng tôi quản lý dữ liệu hiệu quả hơn rất nhiều. UI/UX cực kỳ trực quan và dễ sử dụng.",
+    rating: 5,
+  },
+];
+
+export const skills = [
+  { name: "React / Next.js", level: 92 },
+  { name: "TypeScript", level: 88 },
+  { name: "UI/UX Design (Figma)", level: 90 },
+  { name: "Tailwind CSS / CSS3", level: 95 },
+  { name: "Framer Motion / Animation", level: 85 },
+  { name: "Node.js / Backend", level: 75 },
+];
+
+export const timeline = [
+  {
+    year: "2024 — Nay",
+    title: "Freelance Developer & Designer",
+    desc: "Nhận dự án thiết kế web và ứng dụng cho doanh nghiệp vừa và nhỏ.",
+  },
+  {
+    year: "2023",
+    title: "Frontend Developer Intern",
+    desc: "Thực tập và phát triển kỹ năng React, TypeScript tại công ty công nghệ.",
+  },
+  {
+    year: "2022",
+    title: "Bắt đầu hành trình IT",
+    desc: "Nhập học ngành Công nghệ Thông tin, bắt đầu tự học lập trình web.",
+  },
 ];

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* =============================================
-   Global Reset and Base Styles
+   Global Reset and Base Styles (V5.0)
    ============================================= */
 * {
   box-sizing: border-box;
@@ -16,7 +16,7 @@ body,
 #root {
   background-color: #0C0C0C;
   color: #FFFFFF;
-  font-family: 'Kanit', sans-serif;
+  font-family: 'Inter', 'Kanit', sans-serif;
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -24,20 +24,22 @@ body,
 }
 
 /* =============================================
-   Custom Scrollbar
+   Custom Scrollbar (V5.0 Neon Scrollbar)
    ============================================= */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: #0C0C0C;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(215, 226, 234, 0.2);
-  border-radius: 3px;
+  background: linear-gradient(180deg, #B600A8, #7621B0);
+  border-radius: 4px;
+  border: 2px solid #0C0C0C;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(215, 226, 234, 0.4);
+  background: linear-gradient(180deg, #BE4C00, #B600A8);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -56,19 +58,118 @@ body,
 }
 
 /* =============================================
-   Hero Heading Gradient
+   Hero Heading Gradient (V5.0 Shimmer)
    ============================================= */
 .hero-heading {
-  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  background: linear-gradient(
+    120deg,
+    #464B52 0%,
+    #8A95A0 25%,
+    #D7E2EA 50%,
+    #8A95A0 75%,
+    #464B52 100%
+  );
+  background-size: 200% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: shimmer-text 6s ease-in-out infinite;
+}
+
+@keyframes shimmer-text {
+  0%, 100% { background-position: 200% 0; }
+  50% { background-position: -200% 0; }
+}
+
+/* =============================================
+   Text Shimmer Effect (V5.0)
+   ============================================= */
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    #D7E2EA 0%,
+    #B600A8 30%,
+    #7621B0 50%,
+    #B600A8 70%,
+    #D7E2EA 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-text 4s ease-in-out infinite;
+}
+
+/* =============================================
+   Glassmorphism Card (V5.0)
+   ============================================= */
+.glass-card {
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+}
+
+.glass-card-light {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+}
+
+/* =============================================
+   Animated Gradient Border (V5.0)
+   ============================================= */
+.gradient-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(118, 33, 176, 0.4),
+    rgba(182, 0, 168, 0.4),
+    rgba(190, 76, 0, 0.3),
+    rgba(118, 33, 176, 0.4)
+  );
+  background-size: 300% 300%;
+  animation: border-flow 6s ease infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes border-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* =============================================
+   Noise Texture Overlay (V5.0)
+   ============================================= */
+.noise-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 9998;
+  mix-blend-mode: overlay;
 }
 
 /* =============================================
    Hologram Portrait Effect
    ============================================= */
-
-/* Rotating 3D ring around portrait */
 @keyframes hologram-ring-spin {
   0%   { transform: rotateX(68deg) rotateZ(0deg); }
   100% { transform: rotateX(68deg) rotateZ(360deg); }
@@ -79,7 +180,6 @@ body,
   transform-style: preserve-3d;
 }
 
-/* Scan line sweeping down */
 @keyframes scan-line {
   0%   { top: -10%; opacity: 0; }
   10%  { opacity: 1; }
@@ -91,7 +191,6 @@ body,
   animation: scan-line 3s ease-in-out infinite;
 }
 
-/* Glow pulse behind portrait */
 @keyframes glow-pulse {
   0%, 100% { opacity: 0.3; transform: scale(1); }
   50%      { opacity: 0.6; transform: scale(1.08); }
@@ -213,7 +312,7 @@ body,
 }
 
 /* =============================================
-   Animated Ambient Mesh Gradients (v4.0)
+   Animated Ambient Mesh Gradients (V5.0)
    ============================================= */
 @keyframes mesh-drift-1 {
   0%, 100% { transform: translate(0px, 0px) scale(1); }
@@ -230,6 +329,18 @@ body,
   0%, 100% { transform: translate(0px, 0px) scale(1); }
   40%      { transform: translate(70px, 40px) scale(0.9); }
   75%      { transform: translate(-40px, -60px) scale(1.1); }
+}
+
+@keyframes mesh-drift-4 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  35%      { transform: translate(-50px, -30px) scale(1.1); }
+  70%      { transform: translate(40px, 60px) scale(0.95); }
+}
+
+@keyframes mesh-drift-5 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  45%      { transform: translate(60px, -50px) scale(1.08); }
+  80%      { transform: translate(-35px, 30px) scale(0.92); }
 }
 
 .ambient-glow-1 {
@@ -274,27 +385,36 @@ body,
   z-index: 0;
 }
 
-/* =============================================
-   Custom Scrollbar (v4.2 Neon Scrollbar)
-   ============================================= */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+.ambient-glow-4 {
+  position: absolute;
+  top: 65%;
+  left: 55%;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+  filter: blur(110px);
+  animation: mesh-drift-4 16s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
 }
-::-webkit-scrollbar-track {
-  background: #0C0C0C;
-}
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #B600A8, #7621B0);
-  border-radius: 5px;
-  border: 2px solid #0C0C0C;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #BE4C00, #B600A8);
+
+.ambient-glow-5 {
+  position: absolute;
+  top: 30%;
+  right: 30%;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
+  filter: blur(100px);
+  animation: mesh-drift-5 24s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* =============================================
-   Glitch Hover Effect (v4.2)
+   Glitch Hover Effect (V5.0)
    ============================================= */
 .glitch-hover {
   transition: text-shadow 0.15s ease;
@@ -316,4 +436,143 @@ body,
   100% { transform: translate(0); }
 }
 
+/* =============================================
+   Status Badge Pulse (V5.0)
+   ============================================= */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
 
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* =============================================
+   Typing Cursor (V5.0)
+   ============================================= */
+@keyframes blink-cursor {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.typing-cursor::after {
+  content: '|';
+  display: inline-block;
+  color: #B600A8;
+  animation: blink-cursor 1s step-end infinite;
+  margin-left: 2px;
+}
+
+/* =============================================
+   Animated Counter (V5.0)
+   ============================================= */
+.counter-number {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* =============================================
+   Gradient Divider (V5.0)
+   ============================================= */
+.gradient-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(118, 33, 176, 0.5) 25%,
+    rgba(182, 0, 168, 0.6) 50%,
+    rgba(190, 76, 0, 0.5) 75%,
+    transparent 100%
+  );
+}
+
+/* =============================================
+   Service Card Glow (V5.0)
+   ============================================= */
+.service-card-glow {
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.service-card-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(118, 33, 176, 0) 0%,
+    rgba(182, 0, 168, 0) 50%,
+    rgba(190, 76, 0, 0) 100%
+  );
+  transition: background 0.4s ease;
+  z-index: -1;
+}
+
+.service-card-glow:hover::before {
+  background: linear-gradient(
+    135deg,
+    rgba(118, 33, 176, 0.3) 0%,
+    rgba(182, 0, 168, 0.2) 50%,
+    rgba(190, 76, 0, 0.15) 100%
+  );
+  filter: blur(12px);
+}
+
+/* =============================================
+   Star Rating (V5.0)
+   ============================================= */
+.star-filled {
+  color: #FBBF24;
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.4));
+}
+
+/* =============================================
+   Button Shimmer (V5.0)
+   ============================================= */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.15) 55%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: btn-shimmer-anim 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes btn-shimmer-anim {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* =============================================
+   Reduce Motion (Accessibility)
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .hero-heading,
+  .text-shimmer {
+    animation: none;
+  }
+}
