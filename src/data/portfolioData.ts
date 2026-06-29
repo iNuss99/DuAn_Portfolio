@@ -2,7 +2,7 @@
 
 export const personalInfo = {
   name: "Khoa",
-  title: "Jack -- IT & Web Designer",
+  title: "Khoa -- IT & Web Designer",
   greeting: "hi, i'm khoa",
   bioShort: "sinh viên công nghệ thông tin & nhà thiết kế web đam mê kiến tạo các trang web tối ưu, tương tác và hiện đại",
   bioLong: "Tôi là sinh viên chuyên ngành Công nghệ thông tin, tập trung phát triển lập trình Web (Frontend Development), thiết kế UI/UX và xây dựng các giao diện tương tác mượt mà. Tôi thực sự yêu thích việc đồng hành cùng các dự án, doanh nghiệp muốn tối ưu hiệu năng trang web và tạo dựng hình ảnh chuyên nghiệp nhất trên không gian mạng. Hãy cùng nhau tạo nên những điều phi thường!",
