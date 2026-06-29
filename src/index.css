@@ -20,7 +20,7 @@ body,
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 /* =============================================
@@ -799,4 +799,28 @@ body,
   .text-shimmer {
     animation: none;
   }
+}
+
+/* =============================================
+   Lenis Smooth Scroll Recommended Styles
+   ============================================= */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overflow: clip;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
