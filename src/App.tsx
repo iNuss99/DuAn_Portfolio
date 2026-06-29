@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { HeroSection } from './components/HeroSection';
 import { MarqueeSection } from './components/MarqueeSection';
 import { AboutSection } from './components/AboutSection';
@@ -10,11 +11,13 @@ import { ContactModal } from './components/ContactModal';
 import { CursorGlow } from './components/ui/CursorGlow';
 import { ScrollNav } from './components/ui/ScrollNav';
 import { CyberDock } from './components/ui/CyberDock';
+import { Preloader } from './components/ui/Preloader';
 import { socialLinks, navLinks } from './data/portfolioData';
 import { playClickSound, playHoverSound } from './utils/soundEffects';
 import * as Icons from 'lucide-react';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const [isContactOpen, setIsContactOpen] = useState(false);
 
   const openContact = useCallback(() => setIsContactOpen(true), []);
@@ -25,9 +28,21 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-
   return (
-    <div className="bg-dark min-h-screen w-full text-white font-body overflow-x-clip relative noise-overlay">
+    <>
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <Preloader onComplete={() => setIsLoading(false)} />
+        )}
+      </AnimatePresence>
+
+      {!isLoading && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="bg-dark min-h-screen w-full text-white font-body overflow-x-clip relative noise-overlay"
+        >
 
       {/* Ambient Mesh Glow Blobs (V5.0) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -159,7 +174,9 @@ function App() {
       {/* Contact Form Modal */}
       <ContactModal isOpen={isContactOpen} onClose={closeContact} />
 
-    </div>
+        </motion.div>
+      )}
+    </>
   );
 }
 

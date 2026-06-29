@@ -4,7 +4,7 @@ import { FadeIn } from './ui/FadeIn';
 import { AnimatedText } from './ui/AnimatedText';
 import { ContactButton } from './ui/Buttons';
 import { TechCube3D } from './ui/TechCube3D';
-import { CyberGame } from './ui/CyberGame';
+import { ParticleSphere3D } from './ui/ParticleSphere3D';
 import { personalInfo, decorative3D, skills, timeline } from '../data/portfolioData';
 import { playClickSound, playHoverSound } from '../utils/soundEffects';
 
@@ -68,9 +68,9 @@ const SkillBar = ({ name, level, index }: { name: string; level: number; index: 
 };
 
 export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
-  const [activeTab, setActiveTab] = useState<'orbit' | 'game'>('orbit');
+  const [activeTab, setActiveTab] = useState<'orbit' | 'sphere'>('orbit');
 
-  const switchTab = (tab: 'orbit' | 'game') => {
+  const switchTab = (tab: 'orbit' | 'sphere') => {
     if (tab === activeTab) return;
     playClickSound();
     setActiveTab(tab);
@@ -207,15 +207,15 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
             📦 Hộp công nghệ 3D
           </button>
           <button
-            onClick={() => switchTab('game')}
+            onClick={() => switchTab('sphere')}
             onMouseEnter={playHoverSound}
             className={`px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 border ${
-              activeTab === 'game'
+              activeTab === 'sphere'
                 ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.25)]'
                 : 'bg-transparent text-white/50 border-white/10 hover:text-white hover:border-white/30'
             }`}
           >
-            🎮 Game Diệt Bug
+            🔮 Quả cầu số 3D
           </button>
         </FadeIn>
 
@@ -239,7 +239,7 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
                 </motion.div>
               ) : (
                 <motion.div
-                  key="game"
+                  key="sphere"
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -15 }}
@@ -247,9 +247,9 @@ export const AboutSection = ({ onOpenContact }: AboutSectionProps) => {
                   className="w-full"
                 >
                   <span className="text-[10px] font-bold text-text-primary/40 uppercase tracking-widest block mb-4 font-heading select-none">
-                    🎮 Di chuyển chuột trên màn hình game để bắn hạ Bug
+                    🔮 Nhấp và kéo chuột để xoay quả cầu hạt 3D tự do (rê chuột tương tác)
                   </span>
-                  <CyberGame />
+                  <ParticleSphere3D />
                 </motion.div>
               )}
             </AnimatePresence>

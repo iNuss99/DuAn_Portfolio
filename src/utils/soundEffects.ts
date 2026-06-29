@@ -115,3 +115,50 @@ export const playSuccessSound = () => {
     console.warn("AudioContext error: ", e);
   }
 };
+
+/** Plays a sci-fi system startup sound (boot sound) */
+export const playBootSound = () => {
+  if (isMuted) return;
+  try {
+    const ctx = getAudioContext();
+    const time = ctx.currentTime;
+
+    // A futuristic rising power-up sweep with high-pass filtered noise/tones
+    const chord = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
+    chord.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
+      osc.frequency.setValueAtTime(freq, time);
+      osc.frequency.exponentialRampToValueAtTime(freq * 2, time + 0.6);
+
+      gain.gain.setValueAtTime(0.01, time);
+      gain.gain.linearRampToValueAtTime(0.04, time + 0.2);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.6);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(time);
+      osc.stop(time + 0.6);
+    });
+
+    // An extra laser chime sweep on top
+    const oscSweep = ctx.createOscillator();
+    const gainSweep = ctx.createGain();
+    oscSweep.type = 'sine';
+    oscSweep.frequency.setValueAtTime(800, time + 0.2);
+    oscSweep.frequency.exponentialRampToValueAtTime(1600, time + 0.5);
+
+    gainSweep.gain.setValueAtTime(0.05, time + 0.2);
+    gainSweep.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
+
+    oscSweep.connect(gainSweep);
+    gainSweep.connect(ctx.destination);
+    oscSweep.start(time + 0.2);
+    oscSweep.stop(time + 0.5);
+  } catch (e) {
+    console.warn("AudioContext error: ", e);
+  }
+};
+
