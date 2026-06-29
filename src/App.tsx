@@ -6,7 +6,6 @@ import { AboutSection } from './components/AboutSection';
 import { ServicesSection } from './components/ServicesSection';
 import { ProjectsSection } from './components/ProjectsSection';
 import { StatsSection } from './components/StatsSection';
-import { TestimonialsSection } from './components/TestimonialsSection';
 import { ContactModal } from './components/ContactModal';
 import { CursorGlow } from './components/ui/CursorGlow';
 import { ScrollNav } from './components/ui/ScrollNav';
@@ -71,8 +70,7 @@ function App() {
       {/* 6. Projects Section */}
       <ProjectsSection />
 
-      {/* 7. Testimonials Section */}
-      <TestimonialsSection />
+
 
       {/* Footer Premium Redesign */}
       <footer id="contact" className="bg-[#090909] py-20 px-6 sm:px-10 border-t border-white/5 relative z-20 select-none">

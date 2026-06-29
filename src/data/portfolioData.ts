@@ -155,36 +155,6 @@ export const stats = [
   { value: 99, suffix: "%", label: "Tỷ lệ hoàn thành", icon: "target" },
 ];
 
-export const testimonials = [
-  {
-    name: "Nguyễn Minh Tuấn",
-    role: "CEO, TechViet Solutions",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80&fit=crop&crop=face",
-    content: "Khoa đã thiết kế cho chúng tôi một trang web vượt xa mong đợi. Giao diện đẹp mắt, hiệu ứng mượt mà và luôn bàn giao đúng hạn. Rất chuyên nghiệp!",
-    rating: 5,
-  },
-  {
-    name: "Trần Thu Hà",
-    role: "Marketing Director, CreativeHub",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&fit=crop&crop=face",
-    content: "Làm việc với Khoa là trải nghiệm tuyệt vời. Khả năng biến ý tưởng thành giao diện thực tế rất ấn tượng. Website mới giúp doanh thu tăng 40%.",
-    rating: 5,
-  },
-  {
-    name: "Lê Hoàng Nam",
-    role: "Founder, StartupVN",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80&fit=crop&crop=face",
-    content: "Khoa không chỉ code giỏi mà còn có con mắt thiết kế rất tinh tế. Mọi chi tiết đều được chăm chút kỹ lưỡng. Chắc chắn sẽ hợp tác lâu dài!",
-    rating: 5,
-  },
-  {
-    name: "Phạm Thị Lan",
-    role: "Product Owner, FinSmart",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80&fit=crop&crop=face",
-    content: "Trang web dashboard mà Khoa xây dựng đã giúp team chúng tôi quản lý dữ liệu hiệu quả hơn rất nhiều. UI/UX cực kỳ trực quan và dễ sử dụng.",
-    rating: 5,
-  },
-];
 
 export const skills = [
   { name: "React / Next.js", level: 92 },

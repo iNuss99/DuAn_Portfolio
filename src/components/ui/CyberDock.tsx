@@ -84,7 +84,7 @@ interface CyberDockProps {
   onOpenContact: () => void;
 }
 
-const SECTIONS = ["hero", "about", "services", "projects", "testimonials", "contact"];
+const SECTIONS = ["hero", "about", "services", "projects", "contact"];
 
 export const CyberDock = ({ onOpenContact }: CyberDockProps) => {
   const mouseX = useMotionValue(Infinity);
@@ -165,12 +165,6 @@ export const CyberDock = ({ onOpenContact }: CyberDockProps) => {
         </svg>
       </DockIcon>
 
-      {/* Testimonials */}
-      <DockIcon mouseX={mouseX} label="ĐÁNH GIÁ" onClick={() => handleScrollTo("testimonials")} isActive={activeSection === "testimonials"}>
-        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.24.588 1.81l-3.974 2.89a1 1 0 00-.364 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 9.42c-.772-.57-.373-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-        </svg>
-      </DockIcon>
 
       {/* Contact Form */}
       <DockIcon mouseX={mouseX} label="LIÊN HỆ" onClick={onOpenContact} isActive={activeSection === "contact"}>

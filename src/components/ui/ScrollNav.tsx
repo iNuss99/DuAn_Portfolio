@@ -6,8 +6,7 @@ const SECTIONS = [
   { id: "hero", label: "ĐẦU TRANG" },
   { id: "about", label: "GIỚI THIỆU" },
   { id: "services", label: "DỊCH VỤ" },
-  { id: "projects", label: "DỰ ÁN" },
-  { id: "testimonials", label: "ĐÁNH GIÁ" }
+  { id: "projects", label: "DỰ ÁN" }
 ];
 
 export const ScrollNav = () => {
